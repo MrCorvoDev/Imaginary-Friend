@@ -1,0 +1,9 @@
+{
+   "testEnvironment": "jsdom",
+   "setupFiles": [
+      "./tests/testSetup.js"
+   ],
+   "transformIgnorePatterns": [
+      "node_modules/(?!@ngrx|(?!deck.gl)|ng-dynamic)"
+   ]
+}

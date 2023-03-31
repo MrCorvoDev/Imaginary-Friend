@@ -1,0 +1,12 @@
+{% macro new(id, isPrivate) %}
+<div id="js_e-popup-{{ id }}" class="popup js_e-popup{{ (isPrivate and " js_o-popup-priv") or "" }}">
+   <div class="popup__content">
+      <div class="popup__body js_e-popup-bd">
+         <button type="button" class="popup__close js_e-close-popup"></button>
+         {{ caller() }}
+      </div>
+   </div>
+</div>
+{% endmacro %}
+
+{% macro video(videoID) %}<div data-popup-vid="{{ videoID }}" class="popup__video js_e-popup-vid"></div>{% endmacro %}

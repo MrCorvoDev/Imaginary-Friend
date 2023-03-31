@@ -1,0 +1,35 @@
+{
+   "css.lint.duplicateProperties": "warning",
+   "css.lint.emptyRules": "ignore",
+   "css.lint.vendorPrefix": "ignore",
+   "files.exclude": {
+      "**/tmp": true,
+      "**/node_modules": true,
+      "package-lock.json": true
+   },
+   "javascript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
+   "javascript.format.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces": true,
+   "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
+   "javascript.preferences.importModuleSpecifierEnding": "js",
+   "javascript.preferences.quoteStyle": "double",
+   "javascript.updateImportsOnFileMove.enabled": "always",
+   "path-autocomplete.extensionOnImport": true,
+   "path-autocomplete.pathMappings": {
+      "♔img": "${folder}/src/img",
+      "♔scss": "${folder}/src/scss",
+      "♔js": "${folder}/src/js",
+      "node_modules": "${folder}/node_modules"
+   },
+   "scss.lint.duplicateProperties": "warning",
+   "scss.lint.emptyRules": "ignore",
+   "scss.lint.vendorPrefix": "ignore",
+   "scss.scannerExclude": [
+      "**/.git",
+      "**/node_modules",
+      "**/bower_components",
+      "**/dist",
+      "**/tmp"
+   ],
+   "scss.showErrors": true,
+   "todoist.projectId": "2310560670",
+}

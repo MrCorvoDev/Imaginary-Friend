@@ -1,0 +1,69 @@
+//=======================================================================================================================================================================================================================================================
+.popup {
+   $popupBackSide: rgba(#000, 0.9);
+   $popupBackground: #fff;
+   $popupMaxWidth: 800;
+   $buttonSize: 24;
+   $popupColor: #000;
+   @include dynamic-font(16, 12);
+   visibility: hidden;
+   overflow: auto;
+   z-index: 100;
+   padding: em(8);
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   @include transition(0.5, 0, 0, visibility);
+   &::before {
+      content: "";
+      background: $popupBackSide;
+      opacity: 0;
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      @include transition(0.5, 0, 0, opacity);
+   }
+   &.js_s-act-popup {
+      visibility: visible;
+      &::before {
+         opacity: 1;
+      }
+      .popup__body {
+         opacity: 1;
+         transform: perspective(rem(600)) translate(0, 0) rotateX(0deg);
+      }
+   }
+   &__content {
+      flex-direction: column;
+      min-height: 100%;
+      flex: 1 1 auto;
+      min-width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+   }
+   &__body {
+      opacity: 0;
+      transform: perspective(rem(600)) translate(0, -100%) rotateX(45deg);
+      @include transition();
+      background: $popupBackground;
+      color: $popupColor;
+      padding: em(25);
+      width: 100%;
+      @include dynamic-max-width($popupMaxWidth, $designWidth);
+   }
+   &__close {
+      min-width: em($buttonSize);
+      min-height: em($buttonSize);
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 30;
+      // background: url("♔img/icons/close.svg") 0 0 / 100% no-repeat;
+   }
+}
+//=======================================================================================================================================================================================================================================================

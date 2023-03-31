@@ -1,0 +1,7 @@
+{% macro quantity(class, value = 1) %}
+<div class="quantity form-{{ class }}__quantity">
+   <button type="button" data-quant="+" class="js_e-quant"></button>
+   <input tabindex="-1" readonly type="number" name="form-{{ class }}[quantity]" value="{{ value }}">
+   <button type="button" data-quant="-" class="js_e-quant"></button>
+</div>
+{% endmacro %}

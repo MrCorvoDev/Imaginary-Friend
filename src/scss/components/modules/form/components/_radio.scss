@@ -1,0 +1,67 @@
+//=======================================================================================================================================================================================================================================================
+.radio {
+   $em: 28;
+   @include dynamic-font($em, 26);
+   @function em($one, $two: $em) {
+      @return prc($one, $two, 1) + 0em;
+   }
+   $height: 26;
+   $color: #4d98ef;
+   &__title {
+      margin-bottom: em(math.div($em, 2));
+   }
+   &__option {
+      position: relative;
+      margin-bottom: em(math.div($em, 4));
+      &:last-child {
+         margin: 0;
+      }
+      input {
+         position: absolute;
+         width: 100%; // Для корректного отображения outline
+         height: 100%; // Для корректного отображения outline
+         top: 0;
+         left: 0;
+         z-index: 1;
+         &:checked + label {
+            color: $color;
+            &:before {
+               border-color: $color;
+               box-shadow: 0 0 em(math.div($height, 2)) color.change($color, $alpha: 0.5);
+            }
+            &:after {
+               transform: scale(#{"0." + (round(math.div($height, 5)))});
+               background: $color;
+               box-shadow: 0 0 em(math.div($height, 4)) color.change($color, $alpha: 0.5);
+            }
+         }
+      }
+      label {
+         position: relative;
+         z-index: 2;
+         display: block;
+         background: $backgroundColor;
+         font-size: em(26);
+         @function em($one, $two: 26) {
+            @return prc($one, $two, 1) + 0em;
+         }
+         line-height: em($height);
+         color: color.scale($color, $lightness: +70%);
+         padding: 0 0 0 em($height + 5);
+         cursor: pointer;
+         &:before,
+         &:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: em($height);
+            height: em($height);
+            border-radius: 50%;
+            @include transition();
+            border: em(math.div($height, 8)) solid color.scale($color, $lightness: +70%);
+         }
+      }
+   }
+}
+//=======================================================================================================================================================================================================================================================

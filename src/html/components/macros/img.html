@@ -1,0 +1,50 @@
+{% macro img(src, type = "", isLazy = "lazyload", classes = "", attributes = "") %}
+
+{% if not " alt=" in attributes %}{% set attributes = attributes + " alt=''" %}{% endif %}
+{% set attributes = attributes | safe %}
+
+{% if type === "" %}
+{% if (not ".jpg" in src) and (not ".jpeg" in src) and (not ".png" in src) %}{% set type = 0 %}
+{% elif "w, " in src %}{% set type = 2 %}
+{% else %}{% set type = 1 %}{% endif %}
+{% endif %}
+
+{% if isDev %}
+{% if type === 2 %}
+{% set src = src | split(" ")%}
+{% set src = src[src.length - 2] %}
+{% endif %}
+
+<img class="{{ classes }}" src={{ src }} {{ attributes }}>
+
+{% else %}
+
+{% if isLazy %}
+{% set lazyAttr = "=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== data-" | safe %}
+{% set lazySrcSet = "srcset" + lazyAttr %}
+{% set lazySrc = "src" + lazyAttr %}
+{% set classes = isLazy + " " + classes %}
+{% endif %}
+
+{% set extension = src | split(".") | last | split(" ") | first %}
+{% set mimeType %}{% if extension === "jpg" %}jpeg{% else %}{{extension}}{% endif %}{% endset %}
+{% set pathWebp = src | replace(extension, "webp") %}
+
+
+{% if type === 1 %}
+<picture>
+   <source {{ lazySrcSet }}srcset={{ pathWebp }} type=image/webp>
+   <img class="{{ classes }}" {{ lazySrc }}src={{ src }} {{ attributes }}>
+</picture>
+{% elif type === 2 %}
+<picture>
+   <source {{ lazySrcSet }}srcset="{{ pathWebp }}" type=image/webp>
+   <source {{ lazySrcSet }}srcset="{{src}}" type=image/{{mimeType}}>
+   <img class="{{ classes }}" {{ lazySrc }}src={{src | split(" ") | first}} {{ attributes }}>
+</picture>
+{% else %}
+<img class="{{ classes }}" {{ lazySrc }}src={{ src }} {{ attributes }}>
+{% endif %}
+
+{% endif %}
+{% endmacro %}

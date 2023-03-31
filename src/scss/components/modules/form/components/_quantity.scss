@@ -1,0 +1,50 @@
+//=======================================================================================================================================================================================================================================================
+.quantity {
+   $height: 50;
+   $color: #00802f;
+   @include dynamic-font(16, 14);
+   display: inline-flex;
+   height: em($height);
+   width: em($height * 3);
+   border-radius: em(math.div($height, 2));
+   background: color.scale($color, $lightness: +85%);
+   input,
+   button {
+      flex: 0 0 em($height);
+   }
+   button {
+      position: relative;
+      @include transition(0.1);
+      &:before,
+      &[data-quant="+"]:after {
+         content: "";
+         position: absolute;
+         top: 50%;
+         left: 50%;
+         width: em(math.div($height, 4));
+         height: em(math.div($height, 16));
+         transform: translate(-50%, 0);
+         background: color.scale($color, $lightness: -85%);
+         @include transition(0.1);
+      }
+      &[data-quant="+"]:after {
+         transform: translate(-50%, 0) scale(1) rotate(90deg);
+      }
+      body.js_s-mouse &:active {
+         &:before,
+         &:after {
+            background: $color;
+         }
+         transform: scale(1.1);
+      }
+   }
+   input {
+      color: color.scale($color, $lightness: -85%);
+      min-width: em($height);
+      text-align: center;
+      background: transparent;
+      pointer-events: none;
+      font-weight: 700;
+   }
+}
+//=======================================================================================================================================================================================================================================================

@@ -1,0 +1,126 @@
+//=======================================================================================================================================================================================================================================================
+.select {
+   $em: 20;
+   @include dynamic-font($em, 18);
+   @function em($one, $two: $em) {
+      @return prc($one, $two, 1) + 0em;
+   }
+   $background: #cedfdb;
+   $selectColor: #333;
+   $valuePaddingRight: em(8);
+   $paddingRightPlusIconWidth: em(24);
+   $valuePadding: em(13) em(8);
+   $borderRadius: em(4);
+   $borderWidth: em(2);
+   $imgWidth: em(16.5);
+   $imgHeight: em(10.5);
+   $optionPaddingTB: em(5);
+   position: relative;
+   color: $selectColor;
+   z-index: 5;
+   @include transition();
+   &.js_s-act-sel {
+      z-index: 6;
+      &.js_o-sel-search .select__value:after {
+         transform: rotate(-180deg) translate(0, 50%);
+      }
+   }
+   &.js_s-invalid {
+      color: $background;
+      .select {
+         &__title {
+            border-color: color.scale($form-err-color, $lightness: -50%);
+            background: $form-err-color;
+         }
+         &__options {
+            background: $form-err-color;
+            border-color: color.scale($form-err-color, $lightness: -50%);
+         }
+         body.js_s-mouse &__option:hover {
+            background: color.scale($form-err-color, $lightness: -15%);
+         }
+      }
+      &.js_o-sel-search .select__input {
+         color: $background;
+      }
+   }
+   &.js_o-sel-search {
+      .select {
+         &__value {
+            padding: 0;
+            &:after {
+               pointer-events: none;
+               position: absolute;
+               top: 50%;
+               right: $valuePaddingRight;
+               transform: translate(0, -50%);
+            }
+         }
+         &__input {
+            @include transition();
+            width: 100%;
+            padding: $valuePadding;
+            padding-right: $paddingRightPlusIconWidth;
+            background: transparent;
+         }
+      }
+   }
+   &__item {
+      position: relative;
+   }
+   &__title {
+      border: $borderWidth solid color.scale($background, $lightness: -50%);
+      cursor: pointer;
+      display: block;
+      width: 100%;
+      border-radius: $borderRadius $borderRadius 0 0;
+      background: $background;
+      @include transition();
+   }
+   &__value {
+      display: flex;
+      padding: $valuePadding;
+      align-items: center;
+      justify-content: space-between;
+      &:after {
+         content: "";
+         @include transition();
+         min-width: $imgWidth;
+         min-height: $imgHeight;
+         background: url("♔img/icons/select.svg") center / 100% no-repeat;
+         .select.js_s-act-sel & {
+            transform: rotate(-180deg);
+         }
+      }
+   }
+   &__options {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      border-radius: 0 0 $borderRadius $borderRadius;
+      width: 100%;
+      background: $background;
+      border: $borderWidth solid color.scale($background, $lightness: -50%);
+      padding: $optionPaddingTB 0;
+      @include transition();
+   }
+   &__option {
+      width: 100%;
+      text-align: left;
+      padding: $valuePadding;
+      margin: 0;
+      body.js_s-mouse &:hover {
+         background: color.scale($background, $lightness: -15%);
+      }
+   }
+   & select {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      visibility: hidden;
+      opacity: 0;
+   }
+}
+//=======================================================================================================================================================================================================================================================

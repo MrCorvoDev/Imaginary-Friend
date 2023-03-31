@@ -1,0 +1,85 @@
+//=======================================================================================================================================================================================================================================================
+@import "node_modules/alertifyjs/build/css/alertify";
+//=======================================================================================================================================================================================================================================================
+.alertify,
+.alertify-notifier {
+   @include dynamic-font(16, 12);
+}
+.alertify {
+   $dialogBackground: #fff;
+   $activeColor: #a6d1e6;
+
+   .ajs-dialog {
+      background: $dialogBackground;
+      border-radius: em(5);
+      color: #000;
+   }
+   .ajs-header,
+   .ajs-footer {
+      font-weight: 700;
+      background: color.scale($dialogBackground, $lightness: -5%);
+      border-color: color.scale($dialogBackground, $lightness: -25%);
+      border-style: solid;
+   }
+   .ajs-header {
+      border-bottom-width: em(1);
+      border-radius: em(5) em(5) 0 0;
+   }
+   .ajs-body .ajs-content .ajs-input {
+      width: 100%;
+      min-height: em(50);
+      padding: 0 em(20);
+      border-radius: em(5);
+      border: em(1) solid color.scale($dialogBackground, $lightness: -25%);
+      margin-top: em(5);
+   }
+   .ajs-footer {
+      border-top-width: em(1);
+      border-radius: 0 0 em(5) em(5);
+      .ajs-buttons .ajs-button {
+         background: color.scale($dialogBackground, $lightness: -15%);
+         border-radius: em(5);
+         font-weight: bold;
+         text-transform: uppercase;
+         @include transition();
+
+         body.js_s-mouse &:hover {
+            background: $dialogBackground;
+         }
+         &.ajs-ok {
+            background: color.scale($activeColor, $lightness: -15%);
+            body.js_s-mouse &:hover {
+               background: $activeColor;
+            }
+         }
+      }
+   }
+}
+.alertify-notifier {
+   $color: #000;
+   $alternativeColor: #fff;
+   $messageColor: #fff;
+   $errorColor: #f74040;
+   $successColor: #5bbd72f2;
+   $warningColor: #ffcc00;
+   $notificationOpacity: 0.9;
+   .ajs-message {
+      background: rgba($messageColor, $notificationOpacity);
+      color: $color;
+      text-align: center;
+      border-radius: em(5);
+      font-weight: 700;
+      &.ajs-success {
+         color: $alternativeColor;
+         background: rgba($successColor, $notificationOpacity);
+      }
+      &.ajs-error {
+         color: $alternativeColor;
+         background: rgba($errorColor, $notificationOpacity);
+      }
+      &.ajs-warning {
+         background: rgba($warningColor, $notificationOpacity);
+      }
+   }
+}
+//=======================================================================================================================================================================================================================================================

@@ -1,0 +1,69 @@
+//=======================================================================================================================================================================================================================================================
+.check {
+   $em: 18;
+   @include dynamic-font($em, 15);
+   @function em($one, $two: $em) {
+      @return prc($one, $two, 1) + 0em;
+   }
+   $width: 50;
+   $height: math.div($width, 2);
+   $color: #4fbb65;
+   position: relative;
+   input {
+      position: absolute;
+      width: 100%; // Для корректного отображения outline
+      height: 100%; // Для корректного отображения outline
+      top: 0;
+      left: 0;
+      z-index: 1;
+      &.js_s-invalid + label {
+         color: $form-err-color;
+         &:before,
+         &:after {
+            background: $form-err-color;
+         }
+      }
+      &:checked + label {
+         color: $color;
+         &:after {
+            background: color.scale($color, $lightness: -20%);
+            left: em($width - ($height));
+         }
+         &:before {
+            background: $color;
+         }
+      }
+   }
+   label {
+      position: relative;
+      min-height: em($height);
+      cursor: pointer;
+      z-index: 2;
+      width: 100%; // Для корректного отображения outline
+      background-color: $backgroundColor;
+      padding-left: em($width + 10);
+      color: color.scale($color, $lightness: +70%);
+      &:before,
+      &:after {
+         content: "";
+         position: absolute;
+         left: 0;
+         @include transition();
+      }
+      &:before {
+         top: em(math.div(($height - math.div($height, 1.25)), 2));
+         width: em($width);
+         height: em(math.div($height, 1.25));
+         border-radius: em(math.div($width, 3));
+         background: color.scale($color, $lightness: +70%);
+      }
+      &:after {
+         top: 0;
+         width: em($height);
+         height: em($height);
+         border-radius: 50%;
+         background: color.scale($color, $lightness: +40%);
+      }
+   }
+}
+//=======================================================================================================================================================================================================================================================

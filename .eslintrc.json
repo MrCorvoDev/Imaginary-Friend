@@ -1,0 +1,79 @@
+{
+   "plugins": [
+      "jsdoc",
+      "jest"
+   ],
+   "env": {
+      "browser": true,
+      "node": true,
+      "jest": true
+   },
+   "extends": [
+      "eslint:recommended",
+      "plugin:jsdoc/recommended",
+      "plugin:jest/recommended"
+   ],
+   "rules": {
+      "no-unused-vars": "off",
+      "quotes": [
+         "warn",
+         "double"
+      ],
+      "arrow-body-style": [
+         "warn",
+         "as-needed"
+      ],
+      "arrow-parens": [
+         "warn",
+         "as-needed"
+      ],
+      "semi": [
+         "warn",
+         "always",
+         {
+            "omitLastInOneLineBlock": true
+         }
+      ],
+      "semi-spacing": [
+         "warn"
+      ],
+      "semi-style": [
+         "warn",
+         "last"
+      ],
+      "eqeqeq": "error",
+      "prefer-const": "warn",
+      "spaced-comment": [
+         "warn",
+         "always",
+         {
+            "exceptions": [
+               "="
+            ],
+            "markers": [
+               "TODO",
+               "!",
+               "?",
+               "*",
+               "//"
+            ]
+         }
+      ],
+      "no-constant-condition": "off",
+      "no-redeclare": "off",
+      "no-unreachable": "off",
+      "no-inner-declarations": "off",
+      "jsdoc/no-multi-asterisks": "off",
+      "jsdoc/newline-after-description": "off",
+      "jsdoc/require-returns": "off",
+      "jsdoc/require-jsdoc": "off",
+      "jsdoc/require-returns-check": "off",
+      "jest/expect-expect": "off",
+      "jest/no-conditional-expect": "off"
+   },
+   "parser": "@babel/eslint-parser",
+   "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module"
+   }
+}

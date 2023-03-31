@@ -1,0 +1,30 @@
+//=======================================================================================================================================================================================================================================================
+.input {
+   $em: 20;
+   @include dynamic-font($em, 18);
+   @function em($one, $two: $em) {
+      @return prc($one, $two, 1) + 0em;
+   }
+   $height: 50;
+   $paddingRL: em(20);
+   $border: em(5);
+   $focusColor: #000;
+   @include transition(0.15);
+   width: 100%;
+   min-height: em($height);
+   padding: 0 $paddingRL;
+   border-radius: $border;
+   &.js_s-focus {
+      outline: none;
+      border: $border solid $focusColor;
+   }
+   &.js_s-invalid {
+      border: $border solid $form-err-color;
+   }
+}
+textarea.input {
+   $paddingTB: em(15);
+   padding-top: $paddingTB;
+   padding-bottom: $paddingTB;
+}
+//=======================================================================================================================================================================================================================================================

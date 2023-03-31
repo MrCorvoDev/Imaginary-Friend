@@ -1,0 +1,174 @@
+//=======================================================================================================================================================================================================================================================
+// Также breakpoints и designWidth указаны в media-query.js и в number.js
+$designWidth: 1440 !default;
+$minWidth: 320 !default;
+$container: 1258 !default;
+$md1: $container + 12 !default;
+$md2: 1024 !default;
+$md3: 768 !default;
+$md4: 480 !default;
+$headerHeights: (
+   "PC": 80,
+   "Mobile": 50,
+   "StickyPC": 50,
+   "StickyMobile": 30,
+);
+//=======================================================================================================================================================================================================================================================
+$fontFamily: "Montserrat", sans-serif !default;
+//=======================================================================================================================================================================================================================================================
+$color: #fff !default;
+$backgroundColor: #333 !default;
+//=======================================================================================================================================================================================================================================================
+
+//=======================================================================================================================================================================================================================================================
+@function grn($number, $decimal: 4, $mode: round) {
+   // Округлить число
+   $n: 1;
+   @for $i from 1 through $decimal {
+      $n: $n * 10;
+   }
+   @if $mode == round {
+      @return math.div(round($number * $n), $n);
+   } @else if $mode == ceil {
+      @return math.div(ceil($number * $n), $n);
+   } @else {
+      @return math.div(floor($number * $n), $n);
+   }
+}
+@function prc($one, $two: $designWidth, $type: 0) {
+   $result: math.div($one, $two);
+   @if $type != 0 {
+      // Часть от числа
+      @return grn($result);
+   }
+   // Процент от числа
+   @return grn($result * 100%);
+}
+@function rem($one, $type: 0) {
+   $result: prc($one, 16, 1);
+   @if $type != 0 {
+      // Число
+      @return $result;
+   }
+   @return $result + 0rem;
+}
+@function em($one, $two: 16, $type: 0) {
+   $result: prc($one, $two, 1);
+   @if $type != 0 {
+      // Число
+      @return $result;
+   }
+   @return $result + 0em;
+}
+@function dc($pc, $mobile, $viewportUnit: vw) {
+   $addSize: $pc - $mobile;
+   $designWidth: $designWidth - 320;
+   @return calc(#{rem($mobile)} + #{rem($addSize, 1)} * ((100#{$viewportUnit} - #{rem(320)}) / #{rem($designWidth, 1)}));
+}
+//=======================================================================================================================================================================================================================================================
+
+//=======================================================================================================================================================================================================================================================
+@mixin dynamic-option($option, $pc, $mobile, $stopMax: 320, $stopMin: 0, $before: null, $after: null, $viewportUnit: vw) {
+   // Пропускные значения
+   @if $stopMax == 0 {
+      $stopMax: 320;
+   }
+   @if $before == 0 {
+      $before: null;
+   }
+   @if $after == 0 {
+      $after: null;
+   }
+
+   $addSize: $pc - $mobile;
+   $designWidth: $designWidth - $stopMax;
+   @if $stopMax > 320 {
+      @include media-query($stopMax) {
+         #{$option}: $before #{rem($mobile)} $after;
+      }
+   }
+   @if $stopMin != 0 {
+      @include media-query($stopMin, min) {
+         #{$option}: $before #{rem($mobile + rem($addSize, 1) * math.div(($stopMin - $stopMax), rem($designWidth, 1)))} $after;
+      }
+   }
+   #{$option}: $before calc(#{rem($mobile)} + #{rem($addSize, 1)} * ((100#{$viewportUnit} - #{rem($stopMax)}) / #{rem($designWidth, 1)})) $after;
+}
+@mixin dynamic-option-tb($option, $pc, $mobile, $stopMax: 320, $stopMin: 0, $before: null, $after: null, $viewportUnit: vw) {
+   @include dynamic-option($option + "-top", $pc, $mobile, $stopMax, $stopMin, $before, $after, $viewportUnit);
+   @include dynamic-option($option + "-bottom", $pc, $mobile, $stopMax, $stopMin, $before, $after, $viewportUnit);
+}
+@mixin dynamic-option-rl($option, $pc, $mobile, $stopMax: 320, $stopMin: 0, $before: null, $after: null, $viewportUnit: vw) {
+   @include dynamic-option($option + "-right", $pc, $mobile, $stopMax, $stopMin, $before, $after, $viewportUnit);
+   @include dynamic-option($option + "-left", $pc, $mobile, $stopMax, $stopMin, $before, $after, $viewportUnit);
+}
+@mixin dynamic-option-top($option, $pc, $mobile, $stopMax: 320, $stopMin: 0, $before: null, $after: null, $viewportUnit: vw) {
+   @include dynamic-option($option + "-top", $pc, $mobile, $stopMax, $stopMin, $before, $after, $viewportUnit);
+}
+@mixin dynamic-option-right($option, $pc, $mobile, $stopMax: 320, $stopMin: 0, $before: null, $after: null, $viewportUnit: vw) {
+   @include dynamic-option($option + "-right", $pc, $mobile, $stopMax, $stopMin, $before, $after, $viewportUnit);
+}
+@mixin dynamic-option-bottom($option, $pc, $mobile, $stopMax: 320, $stopMin: 0, $before: null, $after: null, $viewportUnit: vw) {
+   @include dynamic-option($option + "-bottom", $pc, $mobile, $stopMax, $stopMin, $before, $after, $viewportUnit);
+}
+@mixin dynamic-option-left($option, $pc, $mobile, $stopMax: 320, $stopMin: 0, $before: null, $after: null, $viewportUnit: vw) {
+   @include dynamic-option($option + "-left", $pc, $mobile, $stopMax, $stopMin, $before, $after, $viewportUnit);
+}
+@mixin dynamic-font($pc, $mobile, $line-height: 0, $letter-spacing: 0, $stopMax: 320, $stopMin: 0, $before: null, $after: null, $viewportUnit: vw) {
+   @include dynamic-option(font-size, $pc, $mobile, $stopMax, $stopMin, $before, $after, $viewportUnit);
+   @if $line-height != 0 {
+      line-height: #{prc($line-height, $pc, 1)};
+   }
+   @if $letter-spacing != 0 {
+      letter-spacing: #{em($letter-spacing, $pc)};
+   }
+}
+@mixin dynamic-max-width($value, $width: $container, $stopMax: $designWidth, $em: default) {
+   // Пропускные значения
+   @if $width == 0 {
+      $width: $container;
+   }
+   @if $stopMax == 0 {
+      $stopMax: $designWidth;
+   }
+
+   max-width: prc($value, $width);
+   @include media-query($stopMax) {
+      @if $em == default {
+         max-width: rem($value);
+      } @else {
+         max-width: em($value, $em);
+      }
+   }
+}
+@mixin transition($duration: 0.3, $delay: 0, $timing-function: 0, $properties: null) {
+   // Пропускные значения
+   @if $duration == 0 {
+      $duration: 0.3;
+   }
+   @if $delay == 0 {
+      $delay: null;
+   } @else {
+      $delay: $delay + s;
+   }
+   @if $timing-function == 0 {
+      $timing-function: null;
+   }
+
+   transition: $properties $duration + s $timing-function $delay;
+}
+@mixin aspect-ratio($x: 16, $y: 9) {
+   padding-bottom: prc($y, $x);
+}
+@mixin media-query($value: $md3, $type: max) {
+   @if $type == max {
+      @media (max-width: rem($value)) {
+         @content;
+      }
+   } @else {
+      @media (min-width: rem($value + 1)) {
+         @content;
+      }
+   }
+}
+//=======================================================================================================================================================================================================================================================
