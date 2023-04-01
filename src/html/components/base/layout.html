@@ -27,7 +27,7 @@
       <main class="content">
          {% block content %}{% endblock content %}
       </main>
-      {% block wrapperBeforeEnd %}{% endblock wrapperBeforeEnd %}
+      {% block wrapperBeforeEnd %}{% include "footer.html" %}{% endblock wrapperBeforeEnd %}
    </div>
    {% block wrapperAfterEnd %}{% endblock wrapperAfterEnd %}
    {% endblock body %}
