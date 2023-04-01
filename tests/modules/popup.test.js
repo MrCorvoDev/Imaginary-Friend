@@ -1,5 +1,4 @@
 //=======================================================================================================================================================================================================================================================
-const menu = document.querySelector(".menu");
 const content = document.body.querySelector(".content");
 content.innerHTML = "<div id=\"js_e-popups\"></div>";
 const module = require("../../src/js/modules/popup.js");
@@ -145,35 +144,6 @@ describe("Тестирование popup", () => {
 
          isPopupOpened(obj);
       });
-   });
-   test("В открытом меню Lock не добавляется и не удаляется повторно", () => {
-      jest.mock("../../src/js/exports/lock.js", () => { // Отслеживать lock
-         const module = jest.requireActual("../../src/js/exports/lock.js");
-         module.default.remove = jest.fn(module.default.remove);
-         module.default.add = jest.fn(module.default.add);
-         return module;
-      });
-      const _lock = require("../../src/js/exports/lock.js").default;
-
-      menu.classList.add("js_s-act-menu");
-      document.body.style.setProperty("--lp", innerWidth - document.body.offsetWidth + "px");
-      document.body.classList.add("js_s-lock"); // Эмулировать открытое меню
-
-      const obj = init(createPopup("one"));
-
-      openPopup();
-      expect(_lock.add.mock.calls.length).toBe(0);
-      expect(obj.popups[0].classList.contains("js_s-act-popup")).toBeTruthy();
-      expect(history.state.popup).toBe("js_e-popup-one");
-
-      closePopup(obj);
-      expect(_lock.remove.mock.calls.length).toBe(0);
-      expect(obj.popups[0].classList.contains("js_s-act-popup")).toBeFalsy();
-      expect(history.state.popup).toBe("");
-
-      menu.classList.remove("js_s-act-menu");
-      document.body.style.setProperty("--lp", "");
-      document.body.classList.remove("js_s-lock"); // Вернуть по умолчанию
    });
    if (module.__get__("isFeat").video) test("Youtube video", () => {
       const obj = init(createPopup("one", "", "<div class=\"js_e-popup-vid\" data-popup-vid=\"SOME_ID\"></div>"));

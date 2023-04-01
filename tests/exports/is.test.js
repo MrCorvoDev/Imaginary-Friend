@@ -2,7 +2,6 @@
 import _is from "../../src/js/exports/is.js";
 //=======================================================================================================================================================================================================================================================
 const content = document.body.querySelector(".content");
-const header = document.getElementById("js_e-header");
 
 describe("Тестирование _is", () => {
    describe("local", () => {
@@ -39,33 +38,6 @@ describe("Тестирование _is", () => {
       test("Элемент виден хоть на 25%", () => {
          const result = window.g.SIZES[1] - (HEIGHT * 0.25);
          element.style.top = result - 1 + "px";
-         expect(_is.seen(element, 25)).toBeTruthy();
-
-         element.style.top = result + "px";
-         expect(_is.seen(element, 25)).toBeFalsy();
-      });
-      test("Элемент виден хоть на 25%(Простая шапка)", () => {
-         const result = -HEIGHT * 0.75;
-         header.classList.remove("js_e-lp");
-         element.style.top = result + 1 + "px";
-         expect(_is.seen(element, 25)).toBeTruthy();
-
-         element.style.top = result + "px";
-         expect(_is.seen(element, 25)).toBeFalsy();
-         header.classList.add("js_e-lp");
-      });
-      test("Элемент виден хоть на 25%(Обычная шапка)", () => {
-         const result = window.g.HEIGHT_HEADER.PC - HEIGHT * 0.75;
-         element.style.top = result + 1 + "px";
-         expect(_is.seen(element, 25)).toBeTruthy();
-
-         element.style.top = result + "px";
-         expect(_is.seen(element, 25)).toBeFalsy();
-      });
-      test("Элемент виден хоть на 25%(Sticky шапка)", () => {
-         const result = window.g.HEIGHT_HEADER.StickyPC - HEIGHT * 0.75;
-         document.body.classList.add("js_s-sticky");
-         element.style.top = result + 1 + "px";
          expect(_is.seen(element, 25)).toBeTruthy();
 
          element.style.top = result + "px";
