@@ -67,6 +67,48 @@
    }
 }
 //=======================================================================================================================================================================================================================================================
+@import "components/modules/form/base";
+@import "components/modules/form/null";
+@import "components/modules/form/components/input";
+//=======================================================================================================================================================================================================================================================
+.form {
+   @include dynamic-font(16, 10);
+   flex: 1 1 auto;
+   display: flex;
+   flex-direction: column;
+   background: $color-3;
+   padding: em(10) 0;
+   &__body {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      border-radius: em(5);
+      overflow: hidden;
+      background: $color-1;
+   }
+   &__input {
+      background: $color-1;
+      flex: 1 1 auto;
+      resize: none;
+      color: $color;
+      padding-right: em(50);
+      &.js_s-focus {
+         background-color: color.scale($color-1, $lightness: +20%);
+      }
+   }
+   &__btn {
+      position: absolute;
+      width: em(50);
+      height: 100%;
+      top: 0;
+      right: 0;
+      img {
+         width: em(40);
+      }
+   }
+}
+//=======================================================================================================================================================================================================================================================
 @import "components/modules/scroll/bar.scss";
 @import "components/modules/footer.scss";
 @import "components/modules/lock.scss";
