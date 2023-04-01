@@ -1,3 +1,20 @@
 {% extends "base/layout.html" %}
 
-{% block content %}{% endblock content %}
+{% block content %}
+<section class="chat">
+   <div class="chat__scroll-container">
+      <div class="chat__body container" id="js_e-chat">
+
+      </div>
+   </div>
+</section>
+<section class="form">
+   <form action="#" enctype="multipart/form-data" method="post" class="container form__body" data-submit-location="">
+      <textarea name="form[textarea]" data-placeholder="Don't hesitate, go on!" class="js_e-input input js_e-req form__input"></textarea>
+      <button type="submit" class="form__btn">{{ img("♔img/icons/send.svg") }}</button>
+   </form>
+</section>
+{% endblock content %}
+{% block wrapperAfterEnd %}
+{% include "reset-button.html" %}
+{% endblock wrapperAfterEnd %}

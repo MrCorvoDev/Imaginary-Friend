@@ -1,5 +1,4 @@
 //=======================================================================================================================================================================================================================================================
-const header = document.body.querySelector("#js_e-header");
 const content = document.body.querySelector(".content");
 
 /**
@@ -44,12 +43,7 @@ describe("Тестирование full-screen", () => {
    });
 
    describe("Переменная по умолчанию устанавливается", () => {
-      test("Переменная по умолчанию устанавливается(header lp)", () => {
-         init(createVH());
-         isHeightRight("vh", window.g.SIZES[1] - window.g.HEIGHT_HEADER.StickyPC, (window.g.SIZES[1] / 2) - window.g.HEIGHT_HEADER.StickyPC);
-      });
-      test("Переменная по умолчанию устанавливается(простая header)", () => {
-         header.classList.remove("js_e-lp");
+      test("Переменная по умолчанию устанавливается", () => {
          init(createVH());
 
          isHeightRight("vh", window.g.SIZES[1], window.g.SIZES[1] / 2);
@@ -62,11 +56,9 @@ describe("Тестирование full-screen", () => {
       });
       test.each([
          ["px:143", window.g.SIZES[1] - 143, (window.g.SIZES[1] / 2) - 143],
-         ["headerH", window.g.SIZES[1] - window.g.HEIGHT_HEADER.PC, (window.g.SIZES[1] / 2) - window.g.HEIGHT_HEADER.PC],
-         ["headerSH", window.g.SIZES[1] - window.g.HEIGHT_HEADER.StickyPC, (window.g.SIZES[1] / 2) - window.g.HEIGHT_HEADER.StickyPC],
          ["strong.dude", window.g.SIZES[1] - 36, (window.g.SIZES[1] / 2) - 36],
-         ["strong.dude & headerSH & px:19", window.g.SIZES[1] - 36 - 19 - window.g.HEIGHT_HEADER.StickyPC, (window.g.SIZES[1] / 2) - 36 - 19 - window.g.HEIGHT_HEADER.StickyPC],
-         ["strong.dude & headerSH & px:19", (window.g.SIZES[1] / 2) - 36 - 19 - window.g.HEIGHT_HEADER.StickyPC, (window.g.SIZES[1] / 4) - 36 - 19 - window.g.HEIGHT_HEADER.StickyPC, 50],
+         ["strong.dude & px:19", window.g.SIZES[1] - 36 - 19, (window.g.SIZES[1] / 2) - 36 - 19],
+         ["strong.dude & px:19", (window.g.SIZES[1] / 2) - 36 - 19, (window.g.SIZES[1] / 4) - 36 - 19, 50],
       ])("Вычитаемая высота в пикселях(%#)", (setting, height, resizedHeight, screenPart = 100) => {
          init(
             createVH(`subtraction, ${screenPart}, ${setting}`) +

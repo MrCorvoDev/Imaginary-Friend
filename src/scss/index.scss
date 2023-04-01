@@ -6,11 +6,112 @@
 
 //=======================================================================================================================================================================================================================================================
 @import "components/libs/lazysizes.scss";
-@import "components/modules/header.scss";
 //=======================================================================================================================================================================================================================================================
-
+.content {
+   display: flex;
+   flex-direction: column;
+}
+//=======================================================================================================================================================================================================================================================
+.chat {
+   position: relative;
+   flex: 1 1 auto;
+   display: flex;
+   flex-direction: column;
+   @include dynamic-font(16, 10);
+   &:before,
+   &:after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: em(50);
+      left: 0;
+      z-index: 1;
+   }
+   &:before {
+      top: 0;
+      background: linear-gradient(180deg, rgba($color-4, 1) 20%, rgba(0, 0, 0, 0) 100%);
+   }
+   &:after {
+      bottom: 0;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba($color-4, 1) 80%);
+   }
+   &__scroll-container {
+      padding: em(50) 0;
+      overflow-y: scroll;
+      height: 70vh;
+      flex: 1 1 auto;
+   }
+   &__body {
+      display: flex;
+      flex-direction: column;
+   }
+   @at-root .message {
+      $message-bg: $color-3;
+      background: $message-bg;
+      padding: em(25) em(15);
+      margin-bottom: em(30);
+      border-radius: em(15);
+      max-width: 90%;
+      position: relative;
+      &:last-child {
+         margin: 0;
+      }
+      &_friend {
+         align-self: flex-start;
+         border-bottom-left-radius: 0;
+      }
+      &_user {
+         align-self: flex-end;
+         border-bottom-right-radius: 0;
+      }
+   }
+}
+//=======================================================================================================================================================================================================================================================
+@import "components/modules/form/base";
+@import "components/modules/form/null";
+@import "components/modules/form/components/input";
+//=======================================================================================================================================================================================================================================================
+.form {
+   @include dynamic-font(16, 10);
+   flex: 1 1 auto;
+   display: flex;
+   flex-direction: column;
+   background: $color-3;
+   padding: em(10) 0;
+   &__body {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      border-radius: em(5);
+      overflow: hidden;
+      background: $color-1;
+   }
+   &__input {
+      background: $color-1;
+      flex: 1 1 auto;
+      resize: none;
+      color: $color;
+      padding-right: em(50);
+      &.js_s-focus {
+         background-color: color.scale($color-1, $lightness: +20%);
+      }
+   }
+   &__btn {
+      position: absolute;
+      width: em(50);
+      height: 100%;
+      top: 0;
+      right: 0;
+      img {
+         width: em(40);
+      }
+   }
+}
 //=======================================================================================================================================================================================================================================================
 @import "components/modules/scroll/bar.scss";
+@import "components/modules/footer.scss";
+@import "components/modules/reset-button.scss";
 @import "components/modules/lock.scss";
 @import "components/libs/alertify.scss";
 @import "components/modules/stop-anim-while-resize.scss";

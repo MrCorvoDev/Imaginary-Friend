@@ -12,7 +12,6 @@
  */
 //=======================================================================================================================================================================================================================================================
 import {debounce} from "../exports/lodash.js";
-import _header from "../exports/header.js";
 import _history from "../exports/history.js";
 import _lock from "../exports/lock.js";
 import _dom from "../exports/dom.js";
@@ -76,7 +75,7 @@ function openPopup(item, video) {
 
    if (isFeat.video && video) video.innerHTML = "<iframe src='https://www.youtube.com/embed/" + _dom.el.attr.get("popup-vid", video) + "?autoplay=1' allow='autoplay; encrypted-media' allowfullscreen></iframe>"; // Вставка видео
 
-   if (!_dom.el.has("act-menu", _header.menu)) _lock.add(500);
+   _lock.add(500);
 
    _dom.el.add("act-popup", item);
    activePopup = item;
@@ -101,7 +100,7 @@ function closePopup(item, isHistory = true, bodyUnlock = true) {
    _dom.el.del("act-popup", item);
    activePopup = null;
 
-   if (!_dom.el.has("act-menu", _header.menu) && bodyUnlock) _lock.remove(500);
+   if (bodyUnlock) _lock.remove(500);
 
    const isPrivate = isFeat.private && _dom.el.has("popup-priv", item, 3);
    _history.push("popup", "", (!isPrivate && isHistory));

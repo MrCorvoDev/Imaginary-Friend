@@ -1,7 +1,6 @@
 //=======================================================================================================================================================================================================================================================
 import _handleCache from "./cache.js";
 import _dom from "./dom.js";
-import _header from "./header.js";
 //=======================================================================================================================================================================================================================================================
 const debug = false && process.env.NODE_ENV === "development";
 /**
@@ -48,16 +47,14 @@ _is.range = function (number, sourceNumber, range = 5) {
  * @returns {boolean} Виден или нет
  */
 _is.seen = function (element, percent) {
-   const headerHeight = !_dom.el.has("lp", _header.self, 1) ? 0 : _dom.el.has("sticky") ? _header.sh : _header.h;
    const elementTop = element.getBoundingClientRect().y;
    const elementBottom = element.getBoundingClientRect().bottom;
    const elementHeight = percent ? ((element.offsetHeight * percent) / 100) : 0;
-   const result = ((innerHeight - (elementTop + elementHeight)) > 0) && (elementBottom > (headerHeight + elementHeight));
+   const result = ((innerHeight - (elementTop + elementHeight)) > 0) && (elementBottom > elementHeight);
 
    if (debug) console.log("vh = ", innerHeight);
    if (debug) console.log("elementTop = ", elementTop);
    if (debug) console.log("elementBottom = ", elementBottom);
-   if (debug) console.log("headerHeight = ", headerHeight);
    if (debug) console.log("elementHeight = ", elementHeight);
    if (debug) console.log("result = ", result);
 
