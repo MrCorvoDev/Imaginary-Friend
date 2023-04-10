@@ -1,5 +1,6 @@
 //=======================================================================================================================================================================================================================================================
-import webpack from "webpack-stream";
+import webpackStream from "webpack-stream";
+import webpack from "webpack";
 import gulp from "gulp";
 import path from "../config/path.js";
 import {notifyError} from "../exports/notifyError.js";
@@ -16,11 +17,16 @@ const compileJS = () => gulp.src(path.src.js, {sourcemaps: isDev})
       file.named = nodePath.basename(file.path, nodePath.extname(file.path));
       cb(null, file);
    }))
-   .pipe(webpack({
+   .pipe(webpackStream({
       mode: !isDev ? "production" : "development",
       output: {
          filename: "[name].js",
       },
+      plugins: [
+         new webpack.DefinePlugin({
+            "process.env": JSON.stringify(process.env),
+         }),
+      ],
       module: {
          rules: [
             {
@@ -35,7 +41,7 @@ const compileJS = () => gulp.src(path.src.js, {sourcemaps: isDev})
             }
          ]
       }
-   }))
+   }, webpack))
    .pipe(ifDev(replace(/♔/g, "../"), replace(/♔/g, `/${path.ftpRoot}/${path.rootF}/`)))
    .pipe(ifProd(terser({toplevel: true})))
    .pipe(gulp.dest(path.dist.js))
