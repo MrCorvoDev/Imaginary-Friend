@@ -54,6 +54,15 @@ const debug = false && process.env.NODE_ENV === "development";
 /* global intlTelInputGlobals */
 if (forms.length) {
    addEventListener("submit", submit);
+   addEventListener("keydown", async e => { // Отправка по Enter
+      if (e.target.tagName !== "TEXTAREA") return;
+      if (e.code !== "Enter") return;
+
+      e.preventDefault();
+
+      setTimeout(() => e.target.value = "", 0); // Очистить textarea сразу после того как запуститься `submit`
+      await submit({target: e.target.form, preventDefault: () => {}});
+   });
 
    /**
     * Отправить форму
@@ -108,13 +117,21 @@ if (forms.length) {
 
       _dom.el.add("send", form);
 
-      const response = action === "#" ? {ok: true} : (await fetch(action, {method: method, body: data})); // Отправка
       const {default: alertify} = await import(/* webpackPrefetch: true */ "alertifyjs");
-      if (response.ok) { // Проверить что форма отправилась успешно
-         await clear(form);
-         if (nextLocation) location.assign(nextLocation);
-         else alertify.notify("Sending is successful", "success");
-      } else alertify.notify("Sending is failed", "error");
+
+      if (form.id === "js_e-form-message") {
+         if (document.activeElement !== form.elements[0]) await clear(form);
+
+         const response = await form.sendMessageToFriend(data.get(form.elements[0].name));
+         if (!response) alertify.notify("Sending is failed", "error");
+      } else {
+         const response = action === "#" ? {ok: true} : (await fetch(action, {method: method, body: data})); // Отправка
+         if (response.ok) { // Проверить что форма отправилась успешно
+            await clear(form);
+            if (nextLocation) location.assign(nextLocation);
+            else alertify.notify("Sending is successful", "success");
+         } else alertify.notify("Sending is failed", "error");
+      }
 
       _dom.el.del("send", form);
    }
