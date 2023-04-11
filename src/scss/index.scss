@@ -46,6 +46,8 @@
       flex-direction: column;
    }
    @at-root .message {
+      opacity: 0;
+      visibility: hidden;
       $message-bg: $color-3;
       background: $message-bg;
       padding: em(25) em(15);

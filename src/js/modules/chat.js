@@ -40,12 +40,56 @@ const message = {
    /**
     * Показать Сообщение
     * @param {Element} message Элемент Сообщения
+    * @param {boolean} isUser Сообщение пользователя?
     */
-   display: message => {
+   display: (message, isUser) => {
       chat.appendChild(message);
       chat.parentElement.scrollTop = chat.parentElement.scrollHeight;
+      animateMessage(message, 200, isUser);
    }
 };
+//=======================================================================================================================================================================================================================================================
+/**
+ * Анимировать
+ * @param {number} duration Длительность анимации
+ * @param {number} initialValue Начальное значение
+ * @param {number} targetValue Конечное значение
+ * @param {Function} runBeforeStart Функция для запуска до старта
+ * @param {Function} runStep Функция для запуска во время шага. В аргумент передается просчитанное значение value, elapsed
+ */
+function animate(duration, initialValue, targetValue, runBeforeStart, runStep) {
+   let start;
+   if (typeof runBeforeStart === "function") runBeforeStart();
+
+   function step(currentTime) {
+      start ??= currentTime;
+
+      const elapsed = currentTime - start;
+      const value = initialValue + (targetValue - initialValue) * (elapsed / duration);
+
+      if (elapsed < duration) {
+         runStep(value, elapsed);
+         requestAnimationFrame(step);
+      } else runStep(targetValue);
+   }
+
+   requestAnimationFrame(step);
+}
+/**
+ * Анимировать элемент появлением
+ * @param {Element} element Элемент
+ * @param {number} duration Длительность анимации
+ * @param {boolean} isUser Сообщение пользователя?
+ */
+function animateMessage(element, duration, isUser) {
+   animate(duration, 0, 100,
+      () => (element.style.visibility = "visible"), // Если показывается то изменить visibility на visible
+      value => {
+         element.style.opacity = value / 100;
+         element.style.transform = `translateX(${isUser ? 100 - value : -(100 - value)}%)`;
+      }
+   );
+}
 //=======================================================================================================================================================================================================================================================
 /**
  * Взаимодействия с историей
@@ -124,7 +168,7 @@ async function fetchFriendMessage() {
 async function sendToAI(personMessageText) {
    // Показать сообщение человека
    const personMessage = message.create(personMessageText, true);
-   message.display(personMessage);
+   message.display(personMessage, true);
 
    // Получить сообщение друга
    const friendMessageText = await fetchFriendMessage();
@@ -132,7 +176,7 @@ async function sendToAI(personMessageText) {
 
    // Показать сообщение друга
    const friendMessage = message.create(friendMessageText);
-   message.display(friendMessage);
+   message.display(friendMessage, false);
 
    // Вернуть успех
    return true;
