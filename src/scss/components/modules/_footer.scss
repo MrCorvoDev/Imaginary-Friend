@@ -7,6 +7,10 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      @include media-query($md4) {
+         padding-right: em(20);
+         padding-left: em(20);
+      }
    }
    &__title {
       font-size: em(9);
