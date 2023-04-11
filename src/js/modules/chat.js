@@ -21,11 +21,12 @@ const message = {
     * Создать Элемент Сообщение
     * @param {string} content Текст Сообщение
     * @param {boolean} isUserMessage Сообщение от пользователя?
+    * @param {boolean} saveInHistory Сохранять сообщение в истории
     * @returns {Element} Элемент Сообщение
     */
-   create: (content, isUserMessage) => {
+   create: (content, isUserMessage, saveInHistory = true) => {
       // Добавить сообщение в историю
-      history.addMessageToHistory(content, isUserMessage);
+      if (saveInHistory) history.addMessageToHistory(content, isUserMessage);
 
       // Создать элемент
       const MAIN_CLASS = "message";
@@ -89,6 +90,19 @@ function animateMessage(element, duration, isUser) {
          element.style.transform = `translateX(${isUser ? 100 - value : -(100 - value)}%)`;
       }
    );
+}
+/** Создать анимацию печатанья точками */
+function runDotTypingAnimation() {
+   const messageEl = message.create("", false, false);
+   messageEl.innerHTML = "<span></span>".repeat(3);
+
+   _dom.el.add("message-typing", messageEl);
+
+   message.display(messageEl, false);
+}
+/** Прервать анимацию печатанья точками */
+function stopDotTypingAnimation() {
+   _dom.el.del("message-typing", chat.lastElementChild);
 }
 //=======================================================================================================================================================================================================================================================
 /**
@@ -171,12 +185,14 @@ async function sendToAI(personMessageText) {
    message.display(personMessage, true);
 
    // Получить сообщение друга
+   runDotTypingAnimation();
    const friendMessageText = await fetchFriendMessage();
    if (!friendMessageText) return friendMessageText;
 
    // Показать сообщение друга
-   const friendMessage = message.create(friendMessageText);
-   message.display(friendMessage, false);
+   stopDotTypingAnimation();
+   chat.lastElementChild.textContent = friendMessageText;
+   history.addMessageToHistory(friendMessageText, false);
 
    // Вернуть успех
    return true;

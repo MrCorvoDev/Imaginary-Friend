@@ -58,6 +58,42 @@
       &:last-child {
          margin: 0;
       }
+      &.js_s-message-typing {
+         span {
+            width: em(8);
+            height: em(8);
+            border-radius: 50%;
+            font-weight: 700;
+            background: $color;
+            margin-right: em(5);
+            &:last-child {
+               margin: 0;
+            }
+            animation: dot-typing 0.6s cubic-bezier(0.5, 0, 0.5, 1) infinite alternate 0s forwards;
+            @keyframes dot-typing {
+               0% {
+                  transform: translateY(-100%);
+                  opacity: 0.3;
+               }
+               40% {
+                  opacity: 1;
+               }
+               60% {
+                  opacity: 1;
+               }
+               100% {
+                  transform: translateY(100%);
+                  opacity: 0.3;
+               }
+            }
+            &:nth-child(2) {
+               animation-delay: 0.1s;
+            }
+            &:nth-child(3) {
+               animation-delay: 0.2s;
+            }
+         }
+      }
       &_friend {
          align-self: flex-start;
          border-bottom-left-radius: 0;
