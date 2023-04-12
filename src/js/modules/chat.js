@@ -44,7 +44,10 @@ const message = {
     * @param {boolean} isUser Сообщение пользователя?
     */
    display: (message, isUser) => {
-      chat.appendChild(message);
+      const lastMessage = chat.lastElementChild;
+      if (lastMessage && isUser && _dom.el.has("message-typing", lastMessage)) lastMessage.before(message); // Если есть анимация печатанья то добавить сообщение перед ней
+      else chat.appendChild(message);
+
       chat.parentElement.scrollTop = chat.parentElement.scrollHeight;
       animateMessage(message, 200, isUser);
    },
@@ -99,18 +102,29 @@ function animateMessage(element, duration, isUser) {
       }
    );
 }
-/** Создать анимацию печатанья точками */
+/**
+ * Создать анимацию печатанья точками
+ * @returns {Element} Элемент Сообщения в котором запущена анимация
+ */
 function runDotTypingAnimation() {
-   const messageEl = message.create("", false, false);
+   let messageEl = chat.lastElementChild;
+   if (_dom.el.has("message-typing", messageEl)) return messageEl;
+
+   messageEl = message.create("", false, false);
    messageEl.innerHTML = "<span></span>".repeat(3);
 
    _dom.el.add("message-typing", messageEl);
 
    message.display(messageEl, false);
+
+   return messageEl;
 }
-/** Прервать анимацию печатанья точками */
-function stopDotTypingAnimation() {
-   _dom.el.del("message-typing", chat.lastElementChild);
+/**
+ * Прервать анимацию печатанья точками
+ * @param {Element} messageEl Элемент в котором нужно остановить анимацию
+ */
+function stopDotTypingAnimation(messageEl) {
+   _dom.el.del("message-typing", messageEl);
 }
 //=======================================================================================================================================================================================================================================================
 /**
@@ -142,6 +156,8 @@ const history = {
     * @param {boolean} isUser Сообщение пользователя?
     */
    addToData: function (str, isUser) {
+      if (this.data.slice(-8) === "\nFriend:" && isUser) this.data = this.data.slice(0, -8); // Если следующее сообщение тоже от пользователя убрать "\nFriend:"
+
       if (isUser) this.data += "\nPerson: " + str + "\nFriend:";
       else this.data += str;
    },
@@ -177,31 +193,36 @@ const history = {
    }
 };
 //=======================================================================================================================================================================================================================================================
+/** Abort Controller */
+let controller;
 /**
  * Получить сообщение друга
  * @returns {string|false} Сообщение друга или false если ошибка
  */
 async function fetchFriendMessage() {
-   const response = await fetch("https://api.openai.com/v1/completions", {
-      method: "POST",
-      headers: {
-         "Accept": "application/json",
-         "Content-Type": "application/json",
-         "Authorization": "Bearer " + process.env.OPENAI_API_KEY
-      },
-      body: JSON.stringify({
-         model: "text-davinci-003",
-         prompt: history.data,
-         max_tokens: 150,
-         temperature: 0.5
-      })
-   });
-   if (!response.ok) return response.ok; // Вернуть неудачу
+   try {
+      const response = await fetch("https://api.openai.com/v1/completions", {
+         signal: controller.signal,
+         method: "POST",
+         headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + process.env.OPENAI_API_KEY
+         },
+         body: JSON.stringify({
+            model: "text-davinci-003",
+            prompt: history.data,
+            max_tokens: 150,
+            temperature: 0.5
+         })
+      });
+      const data = await response.json();
 
-   const data = await response.json();
-   if (data.error?.message) return false; // Вернуть неудачу
-
-   return data.choices?.[0].text; // Вернуть сообщение друга
+      return data.choices?.[0].text; // Вернуть сообщение друга
+   } catch (error) {
+      if (error.name === "AbortError") return 0;
+      else return false;
+   }
 }
 /**
  * Отправить сообщение
@@ -215,13 +236,18 @@ async function sendToAI(personMessageText) {
    message.display(personMessage, true);
 
    // Получить сообщение друга
-   runDotTypingAnimation();
+   const friendMessage = runDotTypingAnimation();
+
+   if (controller) controller.abort(); // Прервать предыдущий fetch
+   controller = new AbortController();
+
    const friendMessageText = await fetchFriendMessage();
+   if (friendMessageText === 0) return true; // Fetch прерван
    if (!friendMessageText) return friendMessageText;
 
    // Показать сообщение друга
-   stopDotTypingAnimation();
-   chat.lastElementChild.textContent = friendMessageText;
+   stopDotTypingAnimation(friendMessage);
+   friendMessage.textContent = friendMessageText;
    history.addMessageToHistory(friendMessageText, false);
 
    // Сохранить переписку

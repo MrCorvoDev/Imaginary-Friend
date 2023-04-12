@@ -73,7 +73,7 @@ if (forms.length) {
       e.preventDefault();
 
       const form = e.target;
-      if (_dom.el.has("send", form)) return;
+      if (_dom.el.has("send", form) && form.id !== "js_e-form-message") return; // Разрешить отправлять повторно если это js_e-form-message форма
 
       const validArray = await validate(form);
       const isValid = validArray[0];
