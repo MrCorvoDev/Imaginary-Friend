@@ -7,7 +7,10 @@
 import _dom from "../exports/dom.js";
 //=======================================================================================================================================================================================================================================================
 /** Конфиг друга */
-const config = {};
+const config = {
+   /** Эмулировать время печатанья */
+   emulateTyping: true,
+};
 //=======================================================================================================================================================================================================================================================
 /** Чат(Тело всех сообщений) */
 const chat = _dom.get.one("chat", 2);
@@ -198,6 +201,8 @@ const history = {
 //=======================================================================================================================================================================================================================================================
 /** Abort Controller */
 let controller;
+/** Таймер печатанья */
+let typingTimeout;
 /**
  * Получить сообщение друга
  * @returns {string|false} Сообщение друга или false если ошибка
@@ -244,9 +249,17 @@ async function sendToAI(personMessageText) {
    if (controller) controller.abort(); // Прервать предыдущий fetch
    controller = new AbortController();
 
+   if (config.emulateTyping && typingTimeout) clearTimeout(typingTimeout); // Прервать таймаут
+
    const friendMessageText = await fetchFriendMessage();
    if (friendMessageText === 0) return true; // Fetch прерван
    if (!friendMessageText) return friendMessageText;
+
+   // Эмулировать печатанье
+   if (config.emulateTyping) {
+      const typingTime = friendMessageText.length * 100;
+      await new Promise(res => typingTimeout = setTimeout(res, typingTime));
+   }
 
    // Показать сообщение друга
    stopDotTypingAnimation(friendMessage);
