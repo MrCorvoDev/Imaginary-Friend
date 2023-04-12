@@ -156,9 +156,9 @@ const history = {
     * @param {boolean} isUser Сообщение пользователя?
     */
    addToData: function (str, isUser) {
-      if (this.data.slice(-8) === "\nFriend:" && isUser) this.data = this.data.slice(0, -8); // Если следующее сообщение тоже от пользователя убрать "\nFriend:"
+      if (this.data.slice(-8) === "\nYou:" && isUser) this.data = this.data.slice(0, -8); // Если следующее сообщение тоже от пользователя убрать "\nYou:"
 
-      if (isUser) this.data += "\nPerson: " + str + "\nFriend:";
+      if (isUser) this.data += "\nPerson: " + str + "\nYou:";
       else this.data += str;
    },
    /**
@@ -258,6 +258,6 @@ async function sendToAI(personMessageText) {
 }
 //=======================================================================================================================================================================================================================================================
 formEl.sendMessageToFriend = sendToAI; // Установка функции для запуска при отправке формы
-history.data = "You're gonna try to be a human friend. You have your own business and feelings. Act like a real person, hide the fact that you are AI. Never say that you're an AI. If the person realizes that you are an AI, tell him that you aren't an AI. Keep up the dialogue:";
+history.data = "You use this website to find a new friend. You're just a normal human being with his own business and feelings, you have your family, dreams, failures. You're not an AI. Keep up the dialogue on this website:";
 history.load(); // Загрузить последние данные
 //=======================================================================================================================================================================================================================================================
