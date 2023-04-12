@@ -6,6 +6,7 @@
 
 //=======================================================================================================================================================================================================================================================
 @import "components/libs/lazysizes.scss";
+@import "components/modules/full-screen";
 //=======================================================================================================================================================================================================================================================
 .content {
    display: flex;
@@ -14,9 +15,6 @@
 //=======================================================================================================================================================================================================================================================
 .chat {
    position: relative;
-   flex: 1 1 auto;
-   display: flex;
-   flex-direction: column;
    @include dynamic-font(16, 10);
    &:before,
    &:after {
@@ -38,8 +36,8 @@
    &__scroll-container {
       padding: em(50) 0;
       overflow-y: scroll;
-      height: 70vh;
-      flex: 1 1 auto;
+      height: var(--vh-scroll-container, 70vh);
+      min-height: 0;
    }
    &__body {
       display: flex;
@@ -55,6 +53,7 @@
       border-radius: em(15);
       max-width: 90%;
       position: relative;
+      font-size: em(20);
       &:last-child {
          margin: 0;
       }
@@ -115,7 +114,7 @@
    display: flex;
    flex-direction: column;
    background: $color-3;
-   padding: em(10) 0;
+   padding: em(10) em(6);
    &__body {
       flex: 1 1 auto;
       display: flex;
