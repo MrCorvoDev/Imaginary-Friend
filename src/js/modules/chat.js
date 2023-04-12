@@ -47,6 +47,14 @@ const message = {
       chat.appendChild(message);
       chat.parentElement.scrollTop = chat.parentElement.scrollHeight;
       animateMessage(message, 200, isUser);
+   },
+   /**
+    * Показать Сообщение без анимации
+    * @param {Element} message Элемент Сообщения
+    */
+   show: message => {
+      message.style.visibility = "visible";
+      message.style.opacity = 1;
    }
 };
 //=======================================================================================================================================================================================================================================================
@@ -144,6 +152,28 @@ const history = {
     */
    addToMessages: function (str, isUser) {
       this.messages.push({role: isUser ? "user" : "friend", message: str});
+   },
+   save: function () {
+      localStorage.setItem("messages", JSON.stringify(this.messages));
+      localStorage.setItem("data", this.data);
+   },
+   load: function () {
+      const [savedMessages, savedData] = [localStorage.getItem("messages"), localStorage.getItem("data")];
+      if (!savedMessages) return;
+
+      this.messages = JSON.parse(savedMessages);
+      this.data = savedData;
+
+      for (let i = 0; i < this.messages.length; i++) {
+         const {role, message: messageText} = this.messages[i];
+         const isUser = role === "user";
+         const messageEl = message.create(messageText, isUser, false);
+
+         chat.appendChild(messageEl);
+         message.show(messageEl);
+      }
+
+      chat.parentElement.scrollTop = chat.parentElement.scrollHeight;
    }
 };
 //=======================================================================================================================================================================================================================================================
@@ -194,10 +224,14 @@ async function sendToAI(personMessageText) {
    chat.lastElementChild.textContent = friendMessageText;
    history.addMessageToHistory(friendMessageText, false);
 
+   // Сохранить переписку
+   history.save();
+
    // Вернуть успех
    return true;
 }
 //=======================================================================================================================================================================================================================================================
 formEl.sendMessageToFriend = sendToAI; // Установка функции для запуска при отправке формы
 history.data = "You're gonna try to be a human friend. You have your own business and feelings. Act like a real person, hide the fact that you are AI. Never say that you're an AI. If the person realizes that you are an AI, tell him that you aren't an AI. Keep up the dialogue:";
+history.load(); // Загрузить последние данные
 //=======================================================================================================================================================================================================================================================
