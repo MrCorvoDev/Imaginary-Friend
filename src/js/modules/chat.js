@@ -9,7 +9,7 @@ import _dom from "../exports/dom.js";
 /** Конфиг друга */
 const config = {
    /** Эмулировать время печатанья */
-   emulateTyping: true,
+   "typing-delay": true,
 };
 //=======================================================================================================================================================================================================================================================
 /** Чат(Тело всех сообщений) */
@@ -249,14 +249,14 @@ async function sendToAI(personMessageText) {
    if (controller) controller.abort(); // Прервать предыдущий fetch
    controller = new AbortController();
 
-   if (config.emulateTyping && typingTimeout) clearTimeout(typingTimeout); // Прервать таймаут
+   if (config["typing-delay"] && typingTimeout) clearTimeout(typingTimeout); // Прервать таймаут
 
    const friendMessageText = await fetchFriendMessage();
    if (friendMessageText === 0) return true; // Fetch прерван
    if (!friendMessageText) return friendMessageText;
 
    // Эмулировать печатанье
-   if (config.emulateTyping) {
+   if (config["typing-delay"]) {
       const typingTime = friendMessageText.length * 100;
       await new Promise(res => typingTimeout = setTimeout(res, typingTime));
    }
