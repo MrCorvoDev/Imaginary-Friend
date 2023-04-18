@@ -147,6 +147,12 @@
 }
 //=======================================================================================================================================================================================================================================================
 @import "components/modules/scroll/bar.scss";
+@import "components/modules/form/components/select";
+@import "components/modules/form/components/checkbox";
+@import "components/modules/form/components/radio";
+@import "components/modules/form/components/quantity";
+@import "components/modules/form/components/tags-input";
+@import "components/modules/popup.scss";
 @import "components/modules/footer.scss";
 @import "components/modules/reset-button.scss";
 @import "components/modules/lock.scss";

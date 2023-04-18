@@ -1,10 +1,10 @@
 //=======================================================================================================================================================================================================================================================
 .popup {
    $popupBackSide: rgba(#000, 0.9);
-   $popupBackground: #fff;
+   $popupBackground: $backgroundColor;
    $popupMaxWidth: 800;
-   $buttonSize: 24;
-   $popupColor: #000;
+   $buttonSize: 40;
+   $popupColor: $color;
    @include dynamic-font(16, 12);
    visibility: hidden;
    overflow: auto;
@@ -52,18 +52,97 @@
       @include transition();
       background: $popupBackground;
       color: $popupColor;
-      padding: em(25);
+      padding: em(50);
       width: 100%;
       @include dynamic-max-width($popupMaxWidth, $designWidth);
    }
    &__close {
-      min-width: em($buttonSize);
-      min-height: em($buttonSize);
       position: absolute;
       top: 0;
       right: 0;
       z-index: 30;
-      // background: url("♔img/icons/close.svg") 0 0 / 100% no-repeat;
+      img {
+         width: em($buttonSize);
+         height: em($buttonSize);
+      }
+   }
+}
+//=======================================================================================================================================================================================================================================================
+.setup {
+   &__title {
+      font-size: em(28);
+      @function em($one, $two: 28) {
+         @return prc($one, $two, 1) + 0em;
+      }
+      font-weight: 700;
+      letter-spacing: em(0.5);
+      margin-bottom: em(25);
+   }
+   @at-root .profiles {
+      margin-bottom: em(40);
+      &__title {
+         font-size: em(18);
+         @function em($one, $two: 18) {
+            @return prc($one, $two, 1) + 0em;
+         }
+         margin-bottom: em(5);
+      }
+      &__select-profile {
+      }
+      @at-root .form-profiles {
+         display: flex;
+         gap: em(5);
+         margin-bottom: em(15);
+         &__input {
+            flex: 1 1 70%;
+         }
+         &__btn {
+            font-size: em(17);
+            @function em($one, $two: 17) {
+               @return prc($one, $two, 1) + 0em;
+            }
+            font-weight: 700;
+            flex: 1 1 30%;
+            background: $color-3;
+            @include transition();
+            border-radius: em(5);
+            body.js_s-mouse &:hover {
+               background: $color-2;
+            }
+         }
+      }
+   }
+   @at-root .form-setup {
+      &__field {
+         display: flex;
+         flex-direction: column;
+         gap: em(5);
+         margin-bottom: em(20);
+         &:last-child {
+            margin: 0;
+         }
+      }
+      &__title {
+         font-weight: 700;
+         font-size: em(22);
+      }
+      &__label {
+         font-size: em(18);
+         line-height: em(22);
+         @function em($one, $two: 18) {
+            @return prc($one, $two, 1) + 0em;
+         }
+      }
+      &__btn {
+         background: $color-3;
+         padding: em(10) em(20);
+         font-size: em(20);
+         border-radius: em(10);
+         @include transition();
+         body.js_s-mouse &:hover {
+            background: $color-2;
+         }
+      }
    }
 }
 //=======================================================================================================================================================================================================================================================

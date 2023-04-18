@@ -12,10 +12,13 @@
    @include transition(0.15);
    width: 100%;
    min-height: em($height);
+   background: $color-3;
+   color: $color;
    padding: 0 $paddingRL;
    border-radius: $border;
    &.js_s-focus {
       outline: none;
+      background: $color-2;
    }
    &.js_s-invalid {
       background: $form-err-color;

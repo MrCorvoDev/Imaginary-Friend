@@ -116,4 +116,9 @@ debounce("keydown", CLOSE_DELAY, e => (e.code === "Escape") && activePopup && cl
 
 addEventListener("load", actionPopup);
 addEventListener("popstate", actionPopup);
+
+if (!localStorage.getItem("set")) {
+   openPopup(popups["js_e-popup-setup"][0]);
+   // localStorage.setItem("set", true);
+}
 //=======================================================================================================================================================================================================================================================

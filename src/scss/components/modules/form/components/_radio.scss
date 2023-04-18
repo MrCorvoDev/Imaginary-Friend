@@ -1,14 +1,15 @@
 //=======================================================================================================================================================================================================================================================
 .radio {
-   $em: 28;
-   @include dynamic-font($em, 26);
+   $em: 16;
+   @include dynamic-font($em, 12);
    @function em($one, $two: $em) {
       @return prc($one, $two, 1) + 0em;
    }
    $height: 26;
-   $color: #4d98ef;
+   $color: $color-1;
    &__title {
-      margin-bottom: em(math.div($em, 2));
+      font-size: em(18);
+      margin-bottom: em(10);
    }
    &__option {
       position: relative;
@@ -41,8 +42,8 @@
          z-index: 2;
          display: block;
          background: $backgroundColor;
-         font-size: em(26);
-         @function em($one, $two: 26) {
+         font-size: em(18);
+         @function em($one, $two: 16) {
             @return prc($one, $two, 1) + 0em;
          }
          line-height: em($height);
