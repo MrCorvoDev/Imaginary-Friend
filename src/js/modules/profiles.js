@@ -38,7 +38,7 @@ const profiles = {
       "movies": "supernatural, scream, friday the 13th"
    }
 };
-if (!localStorage.getItem("wereDefaultProfilesAdded")) {
+if (!localStorage.getItem("profile(1)")) {
    const keys = Object.keys(profiles);
    for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
@@ -46,6 +46,5 @@ if (!localStorage.getItem("wereDefaultProfilesAdded")) {
       const profilesLength = localStorage.getItem("profiles") || 0;
       localStorage.setItem("profiles", +profilesLength + 1);
    }
-   localStorage.setItem("wereDefaultProfilesAdded", true);
 }
 //=======================================================================================================================================================================================================================================================
