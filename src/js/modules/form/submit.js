@@ -124,6 +124,12 @@ if (forms.length) {
 
          const response = await form.sendMessageToFriend(data.get(form.elements[0].name));
          if (!response) alertify.notify("Sending is failed", "error");
+      } else if (form.id === "js_e-form-profiles") {
+         await clear(form);
+         const messageArray = form.saveThisFriendProfile(data.get(form.elements[0].name));
+         if (messageArray) alertify.notify(...messageArray);
+      } else if (form.id === "js_e-form-setup") {
+         form.setupThisFriendConfig(data);
       } else {
          const response = action === "#" ? {ok: true} : (await fetch(action, {method: method, body: data})); // Отправка
          if (response.ok) { // Проверить что форма отправилась успешно

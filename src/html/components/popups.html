@@ -1,0 +1,118 @@
+{% import "macros/popup.html" as popup %}
+{% from "macros/quantity.html" import quantity %}
+
+<div id="js_e-popups">
+   {% call popup.new("setup", false) %}
+   <div class="setup">
+      <h1 class="setup__title">Imagine Your Friend</h1>
+      <div class="profiles">
+         <h2 class="profiles__title">Save a new profile with the settings selected below. (if you'd like to overwrite some profile, just type its name)</h2>
+         <form action="#" id="js_e-form-profiles" class="form-profiles">
+            <input type="text" name="form-profiles[name]" data-placeholder="Profile Name" class="js_e-input input form-profiles__input js_e-req">
+            <button type="submit" class="form-profiles__btn">Save Profile</button>
+         </form>
+         <div class="profiles__select-profile">
+            <label for="profiles-select" class="profiles__title">Select an Existing Profile</label>
+            <select id="profiles-select" name="form-profiles[profiles]" data-modifier="form-profiles">
+               <option value="">See All Profiles</option>
+               <option value="1">Rock Believer</option>
+               <option value="2">Programmer Freak</option>
+               <option value="3">Supernatural Fan</option>
+            </select>
+         </div>
+      </div>
+      <form action="#" id="js_e-form-setup" class="form-setup">
+         <div class="form-setup__field">
+            <h2 class="form-setup__title">Set Up Your Friend</h2>
+         </div>
+         <div class="form-setup__field">
+            <label for="name" class="form-setup__label">Friend's Name</label>
+            <input type="text" id="name" name="form-setup[name]" data-placeholder="Example: Callista or Samuel" class="js_e-input input js_e-req">
+         </div>
+         <div class="form-setup__field">
+            <div class="check form-setup__check"><input type="checkbox" id="form-setup-typing-delay" checked name="form-setup[typing-delay]" /><label for="form-setup-typing-delay">Emulate typing delay</label></div>
+         </div>
+         <div class="form-setup__field">
+            <label for="age" class="form-setup__label">Age</label>
+            {{ quantity("setup", "18") }}
+         </div>
+         <div class="form-setup__field">
+            <fieldset class="radio">
+               <legend class="radio__title">Gender</legend>
+               <div class="radio__option">
+                  <input type="radio" id="radio__option-1" checked="checked" value="1" name="form-setup[gender]">
+                  <label for="radio__option-1">Female</label>
+               </div>
+               <div class="radio__option">
+                  <input type="radio" id="radio__option-2" value="2" name="form-setup[gender]">
+                  <label for="radio__option-2">Male</label>
+               </div>
+            </fieldset>
+         </div>
+         <div class="form-setup__field">
+            <label for="hobby" class="form-setup__label">Hobbies</label>
+            <div class="tags-input js_e-tags-input">
+               <ul class="tags-input__list">
+                  <li class="tags-input__input">
+                     <input id="hobby" type="text" data-placeholder="Hobby" form="none" class="js_e-input input">
+                  </li>
+               </ul>
+               <button type="button">Add Item</button>
+               <textarea name="form-setup[hobbies]"></textarea>
+            </div>
+         </div>
+         <div class="form-setup__field">
+            <label for="music-genre" class="form-setup__label">Music Genres</label>
+            <div class="tags-input js_e-tags-input">
+               <ul class="tags-input__list">
+                  <li class="tags-input__input">
+                     <input id="music-genre" type="text" data-placeholder="Music Genre" form="none" class="js_e-input input">
+                  </li>
+               </ul>
+               <button type="button">Add Item</button>
+               <textarea name="form-setup[music-genres]"></textarea>
+            </div>
+         </div>
+         <div class="form-setup__field">
+            <label for="music-artist" class="form-setup__label">Music Artists</label>
+            <div class="tags-input js_e-tags-input">
+               <ul class="tags-input__list">
+                  <li class="tags-input__input">
+                     <input id="music-artist" type="text" data-placeholder="Music Artist" form="none" class="js_e-input input">
+                  </li>
+               </ul>
+               <button type="button">Add Item</button>
+               <textarea name="form-setup[music-artists]"></textarea>
+            </div>
+         </div>
+         <div class="form-setup__field">
+            <label for="movie-genre" class="form-setup__label">Movie Genres</label>
+            <div class="tags-input js_e-tags-input">
+               <ul class="tags-input__list">
+                  <li class="tags-input__input">
+                     <input id="movie-genre" type="text" data-placeholder="Movie Genre" form="none" class="js_e-input input">
+                  </li>
+               </ul>
+               <button type="button">Add Item</button>
+               <textarea name="form-setup[movie-genres]"></textarea>
+            </div>
+         </div>
+         <div class="form-setup__field">
+            <label for="movie" class="form-setup__label">Favorite Movies</label>
+            <div class="tags-input js_e-tags-input">
+               <ul class="tags-input__list">
+                  <li class="tags-input__input">
+                     <input id="movie" type="text" data-placeholder="Movie" form="none" class="js_e-input input">
+                  </li>
+               </ul>
+               <button type="button">Add Item</button>
+               <textarea name="form-setup[movies]"></textarea>
+            </div>
+         </div>
+         <div class="form-setup__field">
+            <button type="submit" class="form-setup__btn">Meet Your Friend</button>
+         </div>
+      </form>
+   </div>
+   {% endcall %}
+</div>

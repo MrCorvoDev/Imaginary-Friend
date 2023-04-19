@@ -7,7 +7,7 @@
    }
    $width: 50;
    $height: math.div($width, 2);
-   $color: #4fbb65;
+   $color: $color-1;
    position: relative;
    input {
       position: absolute;

@@ -1,0 +1,77 @@
+//=======================================================================================================================================================================================================================================================
+.tags-input {
+   border-radius: em(20);
+   border: em(1) solid $color-1;
+   padding: em(10);
+   overflow: hidden;
+   &__list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: em(10);
+      align-items: center;
+      margin-bottom: em(10);
+      li {
+         display: flex;
+         align-items: center;
+         gap: em(5);
+         background: $color-3;
+         border-radius: em(20);
+         padding: em(10) em(15);
+         button {
+            flex: 0 0 em(30);
+            width: em(30);
+            height: em(30);
+            background: url("♔img/icons/close.svg") 0 0 / 100% no-repeat;
+            @include transition();
+            body.js_s-mouse &:hover {
+               transform: scale(1.1);
+            }
+         }
+         &.tags-input__input {
+            flex: 1 0 em(150);
+            padding: 0;
+            border-radius: 0;
+            background: none;
+            display: block;
+            @include transition();
+            position: relative;
+            &:before {
+               content: "";
+               position: absolute;
+               width: 100vh;
+               height: 100vh;
+               top: 0;
+               right: 0;
+               transform: translate(50%, -50%);
+               background: radial-gradient(circle, $color-1 0%, rgba(0, 0, 0, 0) 70%);
+               opacity: 0;
+               visibility: hidden;
+               z-index: -1;
+               @include transition();
+            }
+            &.js_s-focus:before {
+               visibility: visible;
+               opacity: 1;
+            }
+         }
+         input {
+            width: 100%;
+            background: transparent !important;
+         }
+      }
+   }
+   & > button {
+      padding: em(15) em(20);
+      background: $color-3;
+      width: 100%;
+      border-radius: em(20);
+      @include transition();
+      body.js_s-mouse &:hover {
+         background: $color-2;
+      }
+   }
+   textarea {
+      display: none;
+   }
+}
+//=======================================================================================================================================================================================================================================================

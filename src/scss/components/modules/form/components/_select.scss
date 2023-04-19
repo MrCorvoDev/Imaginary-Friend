@@ -5,8 +5,8 @@
    @function em($one, $two: $em) {
       @return prc($one, $two, 1) + 0em;
    }
-   $background: #cedfdb;
-   $selectColor: #333;
+   $background: $color-3;
+   $selectColor: $color;
    $valuePaddingRight: em(8);
    $paddingRightPlusIconWidth: em(24);
    $valuePadding: em(13) em(8);
