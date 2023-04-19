@@ -2,6 +2,7 @@
 /** Предустановленные профили */
 const profiles = {
    "1": {
+      "profile-name": "Rock Believer",
       "name": "Mikkey",
       "typing-delay": "on",
       "quantity": "22",
@@ -13,6 +14,7 @@ const profiles = {
       "movies": "almost famous, empire records"
    },
    "2": {
+      "profile-name": "Programmer Freak",
       "name": "Elliot",
       "typing-delay": "on",
       "quantity": "21",
@@ -24,6 +26,7 @@ const profiles = {
       "movies": "cruella, fight club, mr. robot, hackers"
    },
    "3": {
+      "profile-name": "Supernatural Fan",
       "name": "Rowena",
       "typing-delay": "on",
       "quantity": "23",
