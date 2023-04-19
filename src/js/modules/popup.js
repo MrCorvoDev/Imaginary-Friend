@@ -46,6 +46,7 @@ const popups = {};
 const popupsHTMLCollection = popupParent.children;
 for (let i = 0; i < popupsHTMLCollection.length; i++) {
    const popup = popupsHTMLCollection[i];
+   popup.closeThisPopup = () => closePopup(popup);
    const name = popup.id;
    const video = isFeat.video && _dom.get.one("popup-vid", 1, popup);
    popups[name] = [popup, video];
