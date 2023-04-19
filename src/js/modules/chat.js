@@ -373,7 +373,7 @@ const history = {
    /** Загрузить чат */
    load: function () {
       const profilesList = localStorage.getItem("profiles");
-      for (let profileID = NUMBER_OF_PROFILES; profileID < profilesList; profileID++) { // Добавить имена профилей в select
+      for (let profileID = NUMBER_OF_PROFILES + 1; profileID <= profilesList; profileID++) { // Добавить имена профилей в select
          const profileConfig = JSON.parse(localStorage.getItem(`profile(${profileID})`));
          const profileName = profileConfig["profile-name"];
          _select.addItem(selectEl, profileName);
