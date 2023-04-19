@@ -78,6 +78,7 @@ if (selects.length) {
       selectOriginal.value = optionValue;
 
       selectToggle(select.lastElementChild);
+      if (typeof select.applyFriendProfile === "function") select.applyFriendProfile(optionValue);
    }
    /**
     * Открытие\Закрытие select
