@@ -5,12 +5,200 @@
  */
 //=======================================================================================================================================================================================================================================================
 import _dom from "../exports/dom.js";
+import _history from "../exports/history.js";
 //=======================================================================================================================================================================================================================================================
 /** Конфиг друга */
-const config = {
-   /** Эмулировать время печатанья */
-   "typing-delay": true,
+let config;
+/** Форма выбора профиля */
+const formProfileEl = _dom.get.one("form-profiles", 2);
+/** Форма настройки */
+const formSetupEl = _dom.get.one("form-setup", 2);
+/** Элемент выбора профиля */
+const selectEl = formProfileEl.nextElementSibling.lastElementChild;
+/** Количество профилей по умолчанию */
+const NUMBER_OF_PROFILES = 3;
+//=======================================================================================================================================================================================================================================================
+/** Взаимодействие с select */
+const _select = {
+   /**
+    * Получить объект с данными select
+    * @param {Element} select Элемент Select
+    * @returns {object} Объект
+    */
+   toObject: select => {
+      const obj = {};
+
+      obj.originalSelect = select.firstElementChild; // Тег select
+      obj.selectItem = select.lastElementChild; // Созданный элемент select
+      obj.button = obj.selectItem.firstElementChild.firstElementChild.firstElementChild; // Тег span в кнопка
+      obj.list = obj.selectItem.lastElementChild; // Список button тегов
+      obj.id = +obj.originalSelect.lastElementChild.value + 1; // ID Для нового button
+
+      return obj;
+   },
+   /**
+    * Добавить элемент в select
+    * @param {Element} select Элемент Select
+    * @param {string} itemName Имя элемента
+    * @returns {Array|undefined} Массив уведомления или undefined
+    */
+   applyItem: function (select, itemName) {
+      const obj = this.toObject(select);
+
+      if (!this.isItemUniq(obj.list, itemName)) return ["Profile was overwritten", "success"]; // Уведомить если профиль будет перезаписан
+
+      obj.originalSelect.innerHTML += `<option value="${obj.id}">${itemName}</option>`;
+      obj.originalSelect.value = obj.id;
+      obj.button.innerHTML = itemName;
+      obj.list.innerHTML += `<button type="button" data-option="${obj.id}" class="select__option js_e-sel-opt" style="display: none;">${itemName}</button>`;
+   },
+   /**
+    * Добавить элемент в список select
+    * @param {Element} select Элемент Select
+    * @param {string} itemName Имя элемента
+    */
+   addItem: function (select, itemName) {
+      const obj = this.toObject(select);
+
+      obj.originalSelect.innerHTML += `<option value="${obj.id}">${itemName}</option>`;
+      obj.list.innerHTML += `<button type="button" data-option="${obj.id}" class="select__option js_e-sel-opt">${itemName}</button>`;
+   },
+   /**
+    * Проверить уникальный ли элемент для select и показать все элементы
+    * @param {Element} list Список элементов
+    * @param {string} itemName Имя элемента
+    * @returns {boolean} уникальный?
+    */
+   isItemUniq: (list, itemName) => {
+      const items = list.children;
+      for (let i = 0; i < items.length; i++) {
+         const item = items[i];
+         const id = _dom.el.attr.get("option", item);
+
+         if (id) _dom.el.vsb.show(item); // Показать элемент
+         if (item.innerHTML.trim().toLowerCase() === itemName.trim().toLowerCase()) {
+            item.parentElement.parentElement.previousElementSibling.value = id; // Установить значение для элемента select
+            return false;
+         }
+      }
+
+      return true;
+   },
 };
+/**
+ * Конвертировать `FormData`в конфиг
+ * @param {FormData} formData Дата формы
+ * @returns {object} Конфиг
+ */
+function convertFormData(formData) {
+   const newConfig = {};
+   for (const el of formData.entries()) {
+      const [key, value] = el;
+      const newKey = key.match(/\[(.*?)\]/)[1];
+
+      newConfig[newKey] = value;
+   }
+   return newConfig;
+}
+/**
+ * Сохранить профиль
+ * @param {string} profileName Имя профиля
+ * @returns {Array|undefined} Массив для уведомления или undefined
+ */
+function saveProfile(profileName) {
+   const addItemToSelectMessage = _select.applyItem(selectEl, profileName); // Добавить имя профиля в select и получить массив сообщения или undefined
+   const id = selectEl.firstElementChild.value;
+
+   const currentConfig = convertFormData(new FormData(formSetupEl)); // Получить конфиг из данных формы
+   currentConfig["profile-name"] = profileName; // Установить имя профиля
+
+   localStorage.setItem(`profile(${id})`, JSON.stringify(currentConfig));
+   if (id > NUMBER_OF_PROFILES) { // Обновить количество профилей
+      const profilesLength = localStorage.getItem("profiles") || 0;
+      localStorage.setItem("profiles", +profilesLength + 1);
+   }
+
+   if (addItemToSelectMessage) return addItemToSelectMessage;
+}
+formProfileEl.saveThisFriendProfile = saveProfile;
+//=======================================================================================================================================================================================================================================================
+/**
+ * Синхронизировать контент textarea с tags input
+ * @param {Element} textarea Элемент Textarea
+ */
+function syncTagsWithTextarea(textarea) {
+   const tagsArray = textarea.value.split(", ");
+   const list = textarea.previousElementSibling.previousElementSibling;
+   const children = Array.from(list.children);
+   children.pop(); // Удалить input из будущего цикла
+
+   const array = children.length > tagsArray.length ? children : tagsArray; // Массив с большим количеством элементов
+   for (let i = 0; i < array.length; i++) {
+      const tagEl = children[i];
+      const tagText = tagsArray[i];
+
+      if (tagText) { // Добавить тег
+         if (tagEl) tagEl.firstElementChild.innerHTML = tagText; // Заменить тег на новый                  
+         else list.insertAdjacentHTML("afterbegin", `<li><span>${tagText}</span><button type='button'></button></li>`); // Создать новый тег
+      } else tagEl.remove(); // Удалить старый тег
+   }
+}
+/**
+ * Применить профиль
+ * @param {string} id ID Профиля
+ */
+function applyProfile(id) {
+   const currentConfig = JSON.parse(localStorage.getItem(`profile(${id})`));
+   const elements = formSetupEl.elements;
+   for (let i = 0; i < elements.length; i++) {
+      const element = elements[i];
+      const name = element.getAttribute("name")?.match(/\[(.*?)\]/)[1];
+
+      if (name) {
+         if (element.type === "text" || element.type === "number" || element.tagName === "TEXTAREA") element.value = currentConfig[name];
+         if (element.type === "checkbox") element.checked = !!currentConfig[name];
+         if (element.type === "radio") element.checked = currentConfig[name] === element.value;
+         if (element.tagName === "TEXTAREA") syncTagsWithTextarea(element);
+      }
+   }
+}
+selectEl.applyFriendProfile = applyProfile;
+//=======================================================================================================================================================================================================================================================
+/** Генерировать prompt для AI */
+function generatePromptText() {
+   let data = "";
+
+   data += "You use this website to find a new friend. You're just a normal human being with his own business and feelings, you have your family, dreams, failures. You're not an AI. ";
+
+   data += `Your name is ${config["name"]}. `;
+   data += `You're ${config["quantity"]} years old. `;
+   data += `You're ${config["gender"] === 2 ? "male" : "female"}. `;
+   if (config["hobbies"]) data += `Your hobbies: ${config["hobbies"]}. `;
+   if (config["music-genres"]) data += `Your favorite music genres: ${config["music-genres"]}. `;
+   if (config["music-artists"]) data += `Your favorite music artists: ${config["music-artists"]}. `;
+   if (config["movie-genres"]) data += `Your favorite movie genres: ${config["movie-genres"]}. `;
+   if (config["movies"]) data += `Your favorite movies: ${config["movies"]}. `;
+
+   data += "Keep up the dialogue on this website:";
+
+   return data;
+}
+/**
+ * 
+ * @param {FormData} data Данные формы
+ */
+function setupConfig(data) {
+   config = convertFormData(data);
+   localStorage.setItem("currentConfig", JSON.stringify(config));
+
+   formSetupEl.closest(".popup").closeThisPopup(); // Закрыть попап
+
+   message.reset(); // Удалить сообщения
+   history.reset(); // Удалить историю
+
+   history.data = generatePromptText(); // Установить новый prompt
+}
+formSetupEl.setupThisFriendConfig = setupConfig;
 //=======================================================================================================================================================================================================================================================
 /** Чат(Тело всех сообщений) */
 const chat = _dom.get.one("chat", 2);
@@ -64,7 +252,9 @@ const message = {
    show: message => {
       message.style.visibility = "visible";
       message.style.opacity = 1;
-   }
+   },
+   /** Очистить HTML сообщения */
+   reset: () => chat.innerHTML = "",
 };
 //=======================================================================================================================================================================================================================================================
 /**
@@ -175,18 +365,33 @@ const history = {
    addToMessages: function (str, isUser) {
       this.messages.push({role: isUser ? "user" : "friend", message: str});
    },
+   /** Сохранить чат */
    save: function () {
       localStorage.setItem("messages", JSON.stringify(this.messages));
       localStorage.setItem("data", this.data);
    },
+   /** Загрузить чат */
    load: function () {
+      const profilesList = localStorage.getItem("profiles");
+      for (let profileID = NUMBER_OF_PROFILES; profileID < profilesList; profileID++) { // Добавить имена профилей в select
+         const profileConfig = JSON.parse(localStorage.getItem(`profile(${profileID})`));
+         const profileName = profileConfig["profile-name"];
+         _select.addItem(selectEl, profileName);
+      }
+
       const [savedMessages, savedData] = [localStorage.getItem("messages"), localStorage.getItem("data")];
-      if (!savedMessages) return;
+      if (!savedMessages) { // Если сообщений нет загрузить профиль по умолчанию
+         config = JSON.parse(localStorage.getItem("profile(1)"));
+         history.data = generatePromptText();
+         return;
+      }
+
+      config = JSON.parse(localStorage.getItem("currentConfig"));
 
       this.messages = JSON.parse(savedMessages);
       this.data = savedData;
 
-      for (let i = 0; i < this.messages.length; i++) {
+      for (let i = 0; i < this.messages.length; i++) { // Загрузить историю сообщения
          const {role, message: messageText} = this.messages[i];
          const isUser = role === "user";
          const messageEl = message.create(messageText, isUser, false);
@@ -195,7 +400,12 @@ const history = {
          message.show(messageEl);
       }
 
-      chat.parentElement.scrollTop = chat.parentElement.scrollHeight;
+      chat.parentElement.scrollTop = chat.parentElement.scrollHeight; // Прокрутить в конец
+   },
+   /** Сбросить чат */
+   reset: function () {
+      localStorage.removeItem("messages");
+      localStorage.removeItem("data");
    }
 };
 //=======================================================================================================================================================================================================================================================
@@ -274,6 +484,5 @@ async function sendToAI(personMessageText) {
 }
 //=======================================================================================================================================================================================================================================================
 formEl.sendMessageToFriend = sendToAI; // Установка функции для запуска при отправке формы
-history.data = "You use this website to find a new friend. You're just a normal human being with his own business and feelings, you have your family, dreams, failures. You're not an AI. Keep up the dialogue on this website:";
 history.load(); // Загрузить последние данные
 //=======================================================================================================================================================================================================================================================

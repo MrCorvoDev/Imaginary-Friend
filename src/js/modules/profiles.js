@@ -43,6 +43,8 @@ if (!localStorage.getItem("wereDefaultProfilesAdded")) {
    for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
       localStorage.setItem(`profile(${key})`, JSON.stringify(profiles[key]));
+      const profilesLength = localStorage.getItem("profiles") || 0;
+      localStorage.setItem("profiles", +profilesLength + 1);
    }
    localStorage.setItem("wereDefaultProfilesAdded", true);
 }
