@@ -93,7 +93,7 @@ const _tag = {
 };
 //=======================================================================================================================================================================================================================================================
 debounce("click", 250, function ({target: button}) { // Добавить тег
-   const mainEl = button.parentElement;
+   const mainEl = button?.parentElement;
 
    if (button.tagName !== "BUTTON") return;
    if (!_dom.el.has("tags-input", mainEl, 1)) return;
@@ -107,8 +107,8 @@ debounce("click", 250, function ({target: button}) { // Добавить тег
    _tag.add(textarea, input, newTag);
 }, true);
 debounce("click", 250, function ({target: button}) { // Удалить тег
-   const li = button.parentElement;
-   const mainEl = li.parentElement.parentElement;
+   const li = button?.parentElement;
+   const mainEl = li?.parentElement?.parentElement;
 
    if (button.tagName !== "BUTTON") return;
    if (li.tagName !== "LI") return;
