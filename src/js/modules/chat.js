@@ -352,10 +352,8 @@ const history = {
     * @param {boolean} isUser Сообщение пользователя?
     */
    addToData: function (str, isUser) {
-      if (this.data.slice(-8) === "\nYou:" && isUser) this.data = this.data.slice(0, -8); // Если следующее сообщение тоже от пользователя убрать "\nYou:"
-
-      if (isUser) this.data += "\nPerson: " + str + "\nYou:";
-      else this.data += str;
+      if (isUser) this.data += "\nPerson: " + str;
+      else this.data += "\nYou:" + str;
    },
    /**
     * Добавить сообщение в messages
@@ -435,7 +433,7 @@ async function fetchFriendMessage() {
          },
          body: JSON.stringify({
             model: "text-davinci-003",
-            prompt: history.data,
+            prompt: history.data + "\nYou:",
             max_tokens: 150,
             temperature: 0.5
          })
