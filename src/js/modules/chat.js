@@ -442,17 +442,8 @@ async function fetchFriendMessage() {
       else return false;
    }
 }
-/**
- * Отправить сообщение
- * @async
- * @param {FormData} personMessageText Текст сообщения
- * @returns {boolean} Успешная отправка или нет
- */
-async function sendToAI(personMessageText) {
-   // Показать сообщение человека
-   const personMessage = message.create(personMessageText, true);
-   message.display(personMessage, true);
-
+/** Отправить ответ ИИ */
+async function sendAIResponse() {
    // Получить сообщение друга
    const friendMessage = runDotTypingAnimation();
 
@@ -475,6 +466,19 @@ async function sendToAI(personMessageText) {
    stopDotTypingAnimation(friendMessage);
    friendMessage.textContent = friendMessageText;
    history.addMessageToHistory(friendMessageText, false);
+}
+/**
+ * Отправить сообщение
+ * @async
+ * @param {FormData} personMessageText Текст сообщения
+ * @returns {boolean} Успешная отправка или нет
+ */
+async function sendToAI(personMessageText) {
+   // Показать сообщение человека
+   const personMessage = message.create(personMessageText, true);
+   message.display(personMessage, true);
+
+   await sendAIResponse();
 
    // Сохранить переписку
    history.save();
