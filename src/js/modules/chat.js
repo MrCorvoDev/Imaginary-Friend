@@ -168,7 +168,7 @@ selectEl.applyFriendProfile = applyProfile;
 function generatePromptText() {
    let data = "";
 
-   data += "You use this website to find a new friend. You're just a normal human being with his own business and feelings, you have your family, dreams, failures. You're not an AI. ";
+   data += "You use this website to chat with the person. You're just a normal human being with his own business and feelings, you have your family, dreams, failures. You're not an AI. ";
 
    data += `Your name is ${config["name"]}. `;
    data += `You're ${config["quantity"]} years old. `;
@@ -179,7 +179,7 @@ function generatePromptText() {
    if (config["movie-genres"]) data += `Your favorite movie genres: ${config["movie-genres"]}. `;
    if (config["movies"]) data += `Your favorite movies: ${config["movies"]}. `;
 
-   data += "Keep up the dialogue on this website:";
+   data += "If the person ignores your messages, ask if he is okay(It's important). Write your message after 'You:':";
 
    return data;
 }
@@ -352,10 +352,8 @@ const history = {
     * @param {boolean} isUser Сообщение пользователя?
     */
    addToData: function (str, isUser) {
-      if (this.data.slice(-8) === "\nYou:" && isUser) this.data = this.data.slice(0, -8); // Если следующее сообщение тоже от пользователя убрать "\nYou:"
-
-      if (isUser) this.data += "\nPerson: " + str + "\nYou:";
-      else this.data += str;
+      if (isUser) this.data += "\nPerson: " + str;
+      else this.data += "\nYou:" + str;
    },
    /**
     * Добавить сообщение в messages
@@ -379,14 +377,18 @@ const history = {
          _select.addItem(selectEl, profileName);
       }
 
-      const [savedMessages, savedData] = [localStorage.getItem("messages"), localStorage.getItem("data")];
-      if (!savedMessages) { // Если сообщений нет загрузить профиль по умолчанию
+      const currentConfig = localStorage.getItem("currentConfig");
+      if (!currentConfig) { // Если нечего не выбрано загрузить профиль по умолчанию
          config = JSON.parse(localStorage.getItem("profile(1)"));
          history.data = generatePromptText();
          return;
       }
 
-      config = JSON.parse(localStorage.getItem("currentConfig"));
+      config = JSON.parse(currentConfig);
+      history.data = generatePromptText();
+
+      const [savedMessages, savedData] = [localStorage.getItem("messages"), localStorage.getItem("data")];
+      if (!savedMessages) return;
 
       this.messages = JSON.parse(savedMessages);
       this.data = savedData;
@@ -406,6 +408,8 @@ const history = {
    reset: function () {
       localStorage.removeItem("messages");
       localStorage.removeItem("data");
+      this.data = "";
+      this.messages = [];
    }
 };
 //=======================================================================================================================================================================================================================================================
@@ -413,11 +417,14 @@ const history = {
 let controller;
 /** Таймер печатанья */
 let typingTimeout;
+/** Таймаут настойчивости */
+let pushyTimeout;
 /**
  * Получить сообщение друга
+ * @param {number} temperature Насколько точный ответ будет выдавать (0-точный,2-не точный)[0.5]
  * @returns {string|false} Сообщение друга или false если ошибка
  */
-async function fetchFriendMessage() {
+async function fetchFriendMessage(temperature = 0.5) {
    try {
       const response = await fetch("https://api.openai.com/v1/completions", {
          signal: controller.signal,
@@ -429,30 +436,24 @@ async function fetchFriendMessage() {
          },
          body: JSON.stringify({
             model: "text-davinci-003",
-            prompt: history.data,
+            prompt: history.data + "\nYou:",
             max_tokens: 150,
-            temperature: 0.5
+            temperature
          })
       });
       const data = await response.json();
+      const message = data.choices?.[0].text;
 
-      return data.choices?.[0].text; // Вернуть сообщение друга
+      if (!message) return fetchFriendMessage(Math.min(temperature + 0.1, 2));
+
+      return message.slice(0, 1) === "\n" ? message.slice(1) : message; // Вернуть сообщение друга
    } catch (error) {
       if (error.name === "AbortError") return 0;
       else return false;
    }
 }
-/**
- * Отправить сообщение
- * @async
- * @param {FormData} personMessageText Текст сообщения
- * @returns {boolean} Успешная отправка или нет
- */
-async function sendToAI(personMessageText) {
-   // Показать сообщение человека
-   const personMessage = message.create(personMessageText, true);
-   message.display(personMessage, true);
-
+/** Отправить ответ ИИ */
+async function sendAIResponse() {
    // Получить сообщение друга
    const friendMessage = runDotTypingAnimation();
 
@@ -475,9 +476,42 @@ async function sendToAI(personMessageText) {
    stopDotTypingAnimation(friendMessage);
    friendMessage.textContent = friendMessageText;
    history.addMessageToHistory(friendMessageText, false);
+}
+/**
+ * Запустить таймаут настойчивости(Будет спрашивать что-то через определенное время)
+ * Если пользователь так и не ответить, он перестанет через 3 сообщения
+ * @param {number} times Сколько раз был запущен в цепочке [1]
+ * @param {number} delay Задержка [150000]
+ */
+const runPushyTimeout = (times = 1, delay = 15000) => {
+   const STOP_NUMBER = 3;
+   ++times;
+   clearTimeout(pushyTimeout);
+   pushyTimeout = setTimeout(async () => {
+      await sendAIResponse();
+      history.save();
+      if (times <= STOP_NUMBER) runPushyTimeout(times, delay / 1.5); // Если еще не слишком много сообщений подряд отправить еще
+   }, delay);
+};
+/**
+ * Отправить сообщение
+ * @async
+ * @param {FormData} personMessageText Текст сообщения
+ * @returns {boolean} Успешная отправка или нет
+ */
+async function sendToAI(personMessageText) {
+   clearTimeout(pushyTimeout);
+
+   // Показать сообщение человека
+   const personMessage = message.create(personMessageText, true);
+   message.display(personMessage, true);
+
+   await sendAIResponse();
 
    // Сохранить переписку
    history.save();
+
+   runPushyTimeout();
 
    // Вернуть успех
    return true;
