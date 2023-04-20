@@ -4,7 +4,6 @@ const profiles = {
    "1": {
       "profile-name": "Rock Believer",
       "name": "Mikkey",
-      "typing-delay": "on",
       "quantity": "22",
       "gender": "2",
       "hobbies": "rock 'n roll playing, spend time with groupies, hanging out with my band",
@@ -16,7 +15,6 @@ const profiles = {
    "2": {
       "profile-name": "Programmer Freak",
       "name": "Elliot",
-      "typing-delay": "on",
       "quantity": "21",
       "gender": "2",
       "hobbies": "programming, hacking",
@@ -28,7 +26,6 @@ const profiles = {
    "3": {
       "profile-name": "Supernatural Fan",
       "name": "Rowena",
-      "typing-delay": "on",
       "quantity": "23",
       "gender": "1",
       "hobbies": "ghost hunting, exorcism, dealing with demons",
