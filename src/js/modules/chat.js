@@ -481,16 +481,16 @@ async function sendAIResponse() {
  * Запустить таймаут настойчивости(Будет спрашивать что-то через определенное время)
  * Если пользователь так и не ответить, он перестанет через 3 сообщения
  * @param {number} times Сколько раз был запущен в цепочке [1]
- * @param {number} delay Задержка [150000]
+ * @param {number} delay Задержка [60_000]
  */
-const runPushyTimeout = (times = 1, delay = 15000) => {
+const runPushyTimeout = (times = 1, delay = 60_000) => {
    const STOP_NUMBER = 3;
    ++times;
    clearTimeout(pushyTimeout);
    pushyTimeout = setTimeout(async () => {
       await sendAIResponse();
       history.save();
-      if (times <= STOP_NUMBER) runPushyTimeout(times, delay / 1.5); // Если еще не слишком много сообщений подряд отправить еще
+      if (times <= STOP_NUMBER) runPushyTimeout(times, delay * 1.5); // Если еще не слишком много сообщений подряд отправить еще
    }, delay);
 };
 /**
