@@ -28,7 +28,7 @@ const generateFavicon = done => {
          },
          windows: {
             pictureAspect: "noChange",
-            backgroundColor: "#131218",
+            backgroundColor: "#18122b",
             onConflict: "override",
             assets: {
                windows80Ie10Tile: false,
@@ -42,10 +42,10 @@ const generateFavicon = done => {
          },
          androidChrome: {
             pictureAspect: "noChange",
-            themeColor: "#131218",
+            themeColor: "#18122b",
             manifest: {
                name: "App",
-               startUrl: "https://mister-corvo.com",
+               startUrl: "https://mister-corvo.com/www/imaginary-friend",
                display: "standalone",
                orientation: "notSet",
                onConflict: "override",
