@@ -179,7 +179,7 @@ function generatePromptText() {
    if (config["movie-genres"]) data += `Your favorite movie genres: ${config["movie-genres"]}. `;
    if (config["movies"]) data += `Your favorite movies: ${config["movies"]}. `;
 
-   data += "If the person isn't answering your messages, ask why. Write your message after 'You:':";
+   data += "If the person ignores your messages, ask if he is okay(It's important). Write your message after 'You:':";
 
    return data;
 }
@@ -417,6 +417,8 @@ const history = {
 let controller;
 /** Таймер печатанья */
 let typingTimeout;
+/** Таймаут настойчивости */
+let pushyTimeout;
 /**
  * Получить сообщение друга
  * @param {number} temperature Насколько точный ответ будет выдавать (0-точный,2-не точный)[0.5]
@@ -476,12 +478,30 @@ async function sendAIResponse() {
    history.addMessageToHistory(friendMessageText, false);
 }
 /**
+ * Запустить таймаут настойчивости(Будет спрашивать что-то через определенное время)
+ * Если пользователь так и не ответить, он перестанет через 3 сообщения
+ * @param {number} times Сколько раз был запущен в цепочке [1]
+ * @param {number} delay Задержка [150000]
+ */
+const runPushyTimeout = (times = 1, delay = 15000) => {
+   const STOP_NUMBER = 3;
+   ++times;
+   clearTimeout(pushyTimeout);
+   pushyTimeout = setTimeout(async () => {
+      await sendAIResponse();
+      history.save();
+      if (times <= STOP_NUMBER) runPushyTimeout(times, delay / 1.5); // Если еще не слишком много сообщений подряд отправить еще
+   }, delay);
+};
+/**
  * Отправить сообщение
  * @async
  * @param {FormData} personMessageText Текст сообщения
  * @returns {boolean} Успешная отправка или нет
  */
 async function sendToAI(personMessageText) {
+   clearTimeout(pushyTimeout);
+
    // Показать сообщение человека
    const personMessage = message.create(personMessageText, true);
    message.display(personMessage, true);
@@ -490,6 +510,8 @@ async function sendToAI(personMessageText) {
 
    // Сохранить переписку
    history.save();
+
+   runPushyTimeout();
 
    // Вернуть успех
    return true;
