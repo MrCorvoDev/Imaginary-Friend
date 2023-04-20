@@ -379,14 +379,18 @@ const history = {
          _select.addItem(selectEl, profileName);
       }
 
-      const [savedMessages, savedData] = [localStorage.getItem("messages"), localStorage.getItem("data")];
-      if (!savedMessages) { // Если сообщений нет загрузить профиль по умолчанию
+      const currentConfig = localStorage.getItem("currentConfig");
+      if (!currentConfig) { // Если нечего не выбрано загрузить профиль по умолчанию
          config = JSON.parse(localStorage.getItem("profile(1)"));
          history.data = generatePromptText();
          return;
       }
 
-      config = JSON.parse(localStorage.getItem("currentConfig"));
+      config = JSON.parse(currentConfig);
+      history.data = generatePromptText();
+
+      const [savedMessages, savedData] = [localStorage.getItem("messages"), localStorage.getItem("data")];
+      if (!savedMessages) return;
 
       this.messages = JSON.parse(savedMessages);
       this.data = savedData;
