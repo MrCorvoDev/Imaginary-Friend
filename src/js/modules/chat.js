@@ -168,7 +168,7 @@ selectEl.applyFriendProfile = applyProfile;
 function generatePromptText() {
    let data = "";
 
-   data += "You use this website to find a new friend. You're just a normal human being with his own business and feelings, you have your family, dreams, failures. You're not an AI. ";
+   data += "You use this website to chat with the person. You're just a normal human being with his own business and feelings, you have your family, dreams, failures. You're not an AI. ";
 
    data += `Your name is ${config["name"]}. `;
    data += `You're ${config["quantity"]} years old. `;
@@ -179,7 +179,7 @@ function generatePromptText() {
    if (config["movie-genres"]) data += `Your favorite movie genres: ${config["movie-genres"]}. `;
    if (config["movies"]) data += `Your favorite movies: ${config["movies"]}. `;
 
-   data += "Keep up the dialogue on this website:";
+   data += "If the person isn't answering your messages, ask why. Write your message after 'You:':";
 
    return data;
 }
@@ -419,9 +419,10 @@ let controller;
 let typingTimeout;
 /**
  * Получить сообщение друга
+ * @param {number} temperature Насколько точный ответ будет выдавать (0-точный,2-не точный)[0.5]
  * @returns {string|false} Сообщение друга или false если ошибка
  */
-async function fetchFriendMessage() {
+async function fetchFriendMessage(temperature = 0.5) {
    try {
       const response = await fetch("https://api.openai.com/v1/completions", {
          signal: controller.signal,
@@ -435,12 +436,15 @@ async function fetchFriendMessage() {
             model: "text-davinci-003",
             prompt: history.data + "\nYou:",
             max_tokens: 150,
-            temperature: 0.5
+            temperature
          })
       });
       const data = await response.json();
+      const message = data.choices?.[0].text;
 
-      return data.choices?.[0].text; // Вернуть сообщение друга
+      if (!message) return fetchFriendMessage(Math.min(temperature + 0.1, 2));
+
+      return message.slice(0, 1) === "\n" ? message.slice(1) : message; // Вернуть сообщение друга
    } catch (error) {
       if (error.name === "AbortError") return 0;
       else return false;
