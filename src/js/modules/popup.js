@@ -118,7 +118,8 @@ debounce("keydown", CLOSE_DELAY, e => (e.code === "Escape") && activePopup && cl
 addEventListener("load", actionPopup);
 addEventListener("popstate", actionPopup);
 
-if (!localStorage.getItem("isConfigurated")) { // Не показывать повторно
+if (!localStorage.getItem("isApiKnown")) openPopup(popups["js_e-popup-api"][0]); // Если API не известен открыть попап с API
+else if (!localStorage.getItem("isConfigurated")) { // Если API известен но друг не настроен открыть попап с настройкой
    openPopup(popups["js_e-popup-setup"][0]);
    localStorage.setItem("isConfigurated", true);
 }
