@@ -13,8 +13,19 @@ function generateUniqueId() {
 
    return `${timestamp}-${randomNumber}`;
 }
-const cookieUserID = document.cookie.replace(/(?:(?:^|.*;\s*)userID\s*=\s*([^;]*).*$)|^.*$/, "$1");
-const userID = cookieUserID || generateUniqueId();
+const isIDAdded = document.cookie.replace(/(?:(?:^|.*;\s*)isUserID\s*=\s*([^;]*).*$)|^.*$/, "$1");
 //=======================================================================================================================================================================================================================================================
-if (!cookieUserID) document.cookie = `userID=${userID};HttpOnly;SameSite=strict;Secure;path=/;domain=${location.hostname};max-age=60*60*24*365`;
+(async () => {
+   if (!isIDAdded) {
+      const userID = generateUniqueId();
+      await fetch("♔php/set-cookie.php", {
+         method: "POST",
+         headers: {
+            "Content-Type": "application/json"
+         },
+         body: userID
+      });
+      document.cookie = `isUserID=true;path=/;domain=${location.hostname};max-age=${60 * 60 * 24 * 365}`;
+   }
+})();
 //=======================================================================================================================================================================================================================================================
