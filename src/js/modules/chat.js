@@ -4,6 +4,7 @@
  * HTML Структура: #js_e-chat+ANY+#js_e-form-message>ANY>textarea[name="ANY"]
  */
 //=======================================================================================================================================================================================================================================================
+import alertify from "alertifyjs";
 import _dom from "../exports/dom.js";
 import _history from "../exports/history.js";
 //=======================================================================================================================================================================================================================================================
@@ -426,20 +427,12 @@ let pushyTimeout;
  */
 async function fetchFriendMessage(temperature = 0.5) {
    try {
-      const response = await fetch("https://api.openai.com/v1/completions", {
-         signal: controller.signal,
+      const response = await fetch("♔php/receive-ai-response.php", {
          method: "POST",
          headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + process.env.OPENAI_API_KEY
+            "Content-Type": "application/json"
          },
-         body: JSON.stringify({
-            model: "text-davinci-003",
-            prompt: history.data + "\nYou:",
-            max_tokens: 150,
-            temperature
-         })
+         body: history.data
       });
       const data = await response.json();
       const message = data.choices?.[0].text;
@@ -500,6 +493,8 @@ const runPushyTimeout = (times = 1, delay = 60_000) => {
  * @returns {boolean} Успешная отправка или нет
  */
 async function sendToAI(personMessageText) {
+   if (!localStorage.getItem("isApiKnown")) alertify.notify("Type your OpenAI API", "error");
+
    clearTimeout(pushyTimeout);
 
    // Показать сообщение человека

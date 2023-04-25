@@ -68,6 +68,59 @@
    }
 }
 //=======================================================================================================================================================================================================================================================
+.api {
+   &__title {
+      font-size: em(28);
+      @function em($one, $two: 28) {
+         @return prc($one, $two, 1) + 0em;
+      }
+      font-weight: 700;
+      letter-spacing: em(0.5);
+      margin-bottom: em(25);
+   }
+   &__tutorial {
+      font-size: em(18);
+      @function em($one, $two: 18) {
+         @return prc($one, $two, 1) + 0em;
+      }
+      line-height: em(22);
+      span {
+         overflow-wrap: anywhere;
+      }
+      margin-bottom: em(15);
+   }
+   &__sub-title {
+      font-size: em(18);
+      @function em($one, $two: 18) {
+         @return prc($one, $two, 1) + 0em;
+      }
+      line-height: em(22);
+      margin-bottom: em(15);
+   }
+   @at-root .form-api {
+      display: flex;
+      gap: em(5);
+      margin-bottom: em(15);
+      &__input {
+         flex: 1 1 70%;
+      }
+      &__btn {
+         font-size: em(17);
+         @function em($one, $two: 17) {
+            @return prc($one, $two, 1) + 0em;
+         }
+         font-weight: 700;
+         flex: 1 1 30%;
+         background: $color-3;
+         @include transition();
+         border-radius: em(5);
+         body.js_s-mouse &:hover {
+            background: $color-2;
+         }
+      }
+   }
+}
+//=======================================================================================================================================================================================================================================================
 .setup {
    &__title {
       font-size: em(28);
