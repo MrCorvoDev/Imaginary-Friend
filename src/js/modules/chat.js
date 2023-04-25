@@ -4,6 +4,7 @@
  * HTML Структура: #js_e-chat+ANY+#js_e-form-message>ANY>textarea[name="ANY"]
  */
 //=======================================================================================================================================================================================================================================================
+import alertify from "alertifyjs";
 import _dom from "../exports/dom.js";
 import _history from "../exports/history.js";
 //=======================================================================================================================================================================================================================================================
@@ -492,6 +493,8 @@ const runPushyTimeout = (times = 1, delay = 60_000) => {
  * @returns {boolean} Успешная отправка или нет
  */
 async function sendToAI(personMessageText) {
+   if (!localStorage.getItem("isApiKnown")) alertify.notify("Type your OpenAI API", "error");
+
    clearTimeout(pushyTimeout);
 
    // Показать сообщение человека
