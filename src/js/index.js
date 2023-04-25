@@ -1,6 +1,7 @@
 //=======================================================================================================================================================================================================================================================
 import "lazysizes";
 import "./modules/define-device.js";
+import "./modules/handle-api.js";
 import "./modules/form/submit.js";
 import "./modules/form/placeholder.js";
 import "./modules/form/components/select.js";
