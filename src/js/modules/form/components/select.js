@@ -13,7 +13,7 @@ import {debounce} from "../../../exports/lodash.js";
 import _dom from "../../../exports/dom.js";
 import _slide from "../../../exports/slide.js";
 //=======================================================================================================================================================================================================================================================
-const isFeatSelectSearch = true;
+const isFeatSelectSearch = false;
 const selects = _dom.get.all("select", 4);
 if (selects.length) {
    let activeSelect;
