@@ -33,21 +33,21 @@ import _form from "../../exports/form.js";
 import _dom from "../../exports/dom.js";
 //=======================================================================================================================================================================================================================================================
 const isFeat = {
-   intlPhone: true,
-   inputMove: true,
+   intlPhone: false,
+   inputMove: false,
    nextLocation: true,
-   reqGroups: true,
-   email: true,
+   reqGroups: false,
+   email: false,
    checkbox: true,
-   confirmInput: true,
-   imask: true,
+   confirmInput: false,
+   imask: false,
    file: true,
-   range: true,
-   datepicker: true,
-   autosize: true,
+   range: false,
+   datepicker: false,
+   autosize: false,
    password: true,
    select: true,
-   selectSearch: true,
+   selectSearch: false,
 };
 const forms = document.forms;
 const debug = false && process.env.NODE_ENV === "development";
