@@ -134,7 +134,7 @@ if (forms.length) {
          const response = action === "#" ? {ok: true} : (await fetch(action, {method: method, body: data})); // Отправка
          if (response.ok) { // Проверить что форма отправилась успешно
             await clear(form);
-            if (form.id === "js_e-form-api") localStorage.setItem("isApiKnown", true);
+            if (form.id === "js_e-popup-api") localStorage.setItem("isApiKnown", true);
             if (nextLocation) location.assign(nextLocation);
             else alertify.notify("Sending is successful", "success");
          } else alertify.notify("Sending is failed", "error");

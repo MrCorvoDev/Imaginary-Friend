@@ -427,7 +427,7 @@ let pushyTimeout;
  */
 async function fetchFriendMessage(temperature = 0.5) {
    try {
-      const response = await fetch("♔php/receive-ai-response.php", {
+      const response = await fetch("♔php/receive-ai-response.php?v=2", {
          method: "POST",
          headers: {
             "Content-Type": "application/json"
