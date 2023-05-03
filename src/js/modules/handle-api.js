@@ -16,7 +16,7 @@ const isIDAdded = document.cookie.replace(/(?:(?:^|.*;\s*)isUserID\s*=\s*([^;]*)
 (async () => {
    if (!isIDAdded) {
       const userID = generateUniqueId();
-      await fetch("♔php/set-cookie.php", {
+      await fetch("♔php/set-cookie.php?v=2", {
          method: "POST",
          headers: {
             "Content-Type": "application/json"
