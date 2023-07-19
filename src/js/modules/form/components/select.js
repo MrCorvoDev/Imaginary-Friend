@@ -27,7 +27,7 @@ if (selects.length) {
       const select = e.target.closest(".js_e-sel");
 
       if (!select) selectsClose();
-      if (select && document.activeElement?.closest(".js_e-sel") === select) selectToggle(select.lastElementChild); // Срабатывает только когда не срабатывает focusin событие
+      if (select) selectToggle(select.lastElementChild); // Срабатывает только когда не срабатывает focusin событие
    }, true);
    debounce("click", 250, function (e) {
       const option = e.target.closest(".js_e-sel-opt");
